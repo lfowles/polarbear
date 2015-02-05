@@ -17,9 +17,13 @@ namespace TUI
     class Window
     {
     public:
-        Window(void) = default;
+        Window(void): win(nullptr) {};
         Window(WINDOW* win): win(win) {};
+        Window(Window&& other) { win = other.win; other.win = nullptr; };
+        Window& operator=(const Window& other) = delete;
+        Window& operator=(Window&& other) { win = other.win; other.win = nullptr; };
         ~Window(void);
+        operator WINDOW*() { return win; };
 
         static Window Create(void);
 
@@ -34,6 +38,10 @@ namespace TUI
         ~Curses(void);
         void pause(void);
         void refresh(void);
+        void echo(bool enable);
+        void keypad(bool enable);
+        void raw(bool enable);
+
 
     private:
         Window base_window;

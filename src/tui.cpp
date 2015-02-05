@@ -2,22 +2,19 @@
 
 #include <iostream>
 
-#include "ncurses.h"
+#include <ncurses.h>
 
 using namespace TUI;
 
 Curses::Curses(void)
 {
+    //::trace(TRACE_CALLS);
     WINDOW* win = initscr();
     if (win == nullptr)
     {
         throw CursesError("ncurses failed to initialize, see stderr.");
     }
     base_window = Window(win);
-
-    raw();
-    keypad(win, true);
-    noecho();
 }
 
 Curses::~Curses(void)
@@ -32,8 +29,37 @@ Window Window::Create(void)
 
 void Curses::pause(void)
 {
-    std::cout << "pause" << std::endl;
     ::getch();
+}
+
+void Curses::echo(bool enable)
+{
+    if (enable)
+    {
+        ::echo();
+    } else {
+        ::noecho();
+    }
+}
+
+void Curses::raw(bool enable)
+{
+    if (enable)
+    {
+        ::raw();
+    } else {
+        ::noraw();
+    }
+}
+
+void Curses::keypad(bool enable)
+{
+    if (enable)
+    {
+        ::keypad(base_window, true);
+    } else {
+        ::keypad(base_window, false);
+    }
 }
 
 void Curses::refresh(void)
@@ -43,11 +69,9 @@ void Curses::refresh(void)
 
 Window::~Window(void)
 {
-        std::cout << "dest" << std::endl;
-
     if (win != nullptr)
     {
         delwin(win);
+        win = nullptr;
     }
-
 }
