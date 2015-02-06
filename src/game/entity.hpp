@@ -1,16 +1,14 @@
 #ifndef _GAME_ENTITY_HPP_
 #define _GAME_ENTITY_HPP_
 
-#include <vector>
+#include "components.hpp"
 
-class Component
-{
-    void update(double time_elapsed);
-};
+#include <vector>
 
 class Entity
 {
-    std::vector<Component> components;
+public:
+    std::vector<Component*> components;
 };
 
 #endif // _GAME_ENTITY_HPP_
