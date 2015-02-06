@@ -1,14 +1,33 @@
-#include "tui.hpp"
-
-#include <iostream>
-
-using namespace std;
+#include "game/game.hpp"
 
 int main()
 {
-    TUI::Curses curses;
+/*
+    int chr = 0;
 
-    curses.refresh();
-    curses.pause();
+    {
+        TUI::Curses curses;
+
+        curses.raw(true);
+        curses.echo(false);
+        auto input = TUI::Input(curses.stdscr);
+
+        while (!input.has_input())
+            usleep(1000 * 10);
+        chr = input.read();
+        auto size = curses.stdscr.Size();
+        for (int y = 0; y < size.y; ++y) {
+            std::string chrstr(size.x, static_cast<char>(chr));
+            curses.stdscr.Write(chrstr, {0,y});
+        }
+        curses.refresh();
+
+        while (!input.has_input())
+            usleep(1000 * 10);
+    }
+    std::cout <<" got " << chr << std::endl;*/
+    SuspendedMagic game;
+    game.run();
     return 0;
+
 }
