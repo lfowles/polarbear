@@ -27,7 +27,8 @@ int main()
     }
     std::cout <<" got " << chr << std::endl;*/
     SuspendedMagic game;
-    game.run();
+    game.Init();
+    game.Run();
     return 0;
 
 }

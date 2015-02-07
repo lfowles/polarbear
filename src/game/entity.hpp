@@ -8,7 +8,11 @@
 class Entity
 {
 public:
-    std::vector<Component*> components;
+    void AddComponent(Component&& component)
+    {
+        components.push_back(component);
+    }
+    std::vector<Component> components;
 };
 
 #endif // _GAME_ENTITY_HPP_

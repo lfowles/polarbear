@@ -1,32 +1,45 @@
 #ifndef _GAME_SYSTEMMANAGER_HPP_
 #define _GAME_SYSTEMMANAGER_HPP_
 
+#include <memory>
 #include <vector>
 #include "systems.hpp"
 #include "entity.hpp"
-
+#include "helpers.hpp"
 
 class SystemManager
 {
 public:
-    void AddSystem(System& system)
+    SystemManager(void) = default;
+    SystemManager(double max_update_rate) : ms_per_update(1000.0/max_update_rate), accumulated_time(0.0) {};
+    void AddSystem(std::unique_ptr<System>& system)
     {
-        systems.push_back(system);
+        systems.push_back(std::move(system));
     };
+
     void AddEntity(Entity& entity)
     {
         entities.push_back(entity);
     };
-    void update(double time_elapsed)
+    void update(ms time_elapsed)
     {
-        for (auto& system : systems)
+        accumulated_time += time_elapsed;
+        while (accumulated_time > ms_per_update)
         {
-            system.update(time_elapsed);
+            for (auto &system : systems)
+            {
+                system->update(entities, ms_per_update);
+                accumulated_time -= ms_per_update;
+            }
         }
     };
+
+    void SetMaxUpdateRate(double max_update_rate) { ms_per_update = ms(1.0/max_update_rate); };
 private:
-    std::vector<System> systems;
+    std::vector<std::unique_ptr<System>> systems;
     std::vector<Entity> entities;
+    ms ms_per_update;
+    ms accumulated_time;
 };
 
 
