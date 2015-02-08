@@ -16,16 +16,16 @@ void SuspendedMagic::Init(void)
     systems.AddSystem(rendering_system);
 
     Entity a, b, c;
-    DrawableComponent d('|', 20, 20);
-    a.components.push_back(d);
+    auto d = std::unique_ptr<Component>(new DrawableComponent ('|', 20, 20));
+    a.AddComponent(d);
     systems.AddEntity(a);
 
-    DrawableComponent e('_', 21, 20);
-    b.components.push_back(e);
+    auto e = std::unique_ptr<Component>(new DrawableComponent('_', 21, 20));
+    b.AddComponent(e);
     systems.AddEntity(b);
 
-    DrawableComponent f('|', 22, 20);
-    c.components.push_back(f);
+    auto f = std::unique_ptr<Component>(new DrawableComponent('|', 22, 20));
+    c.AddComponent(f);
     systems.AddEntity(c);
 }
 

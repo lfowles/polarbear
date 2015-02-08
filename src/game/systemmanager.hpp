@@ -19,7 +19,7 @@ public:
 
     void AddEntity(Entity& entity)
     {
-        entities.push_back(entity);
+        entities.push_back(std::move(entity));
     };
     void update(ms time_elapsed)
     {

@@ -49,3 +49,8 @@ void Curses::raw(bool enable)
         ::noraw();
     }
 }
+
+void Curses::cursor(Visibility level)
+{
+    curs_set(static_cast<int>(level));
+}

@@ -19,9 +19,9 @@ class RenderSystem : public System
 public:
     RenderSystem(double max_render_rate) : ms_per_render(1000.0/max_render_rate), accumulated_time(0.0)
     {
-//        curses.raw(true);
-//        curses.echo(false);
-//        curses.refresh();
+        curses.raw(true);
+        curses.echo(false);
+        curses.refresh();
     }
 
     virtual void update(std::vector<Entity>& entities, ms time_elapsed)
@@ -29,8 +29,7 @@ public:
         accumulated_time += time_elapsed;
         while (accumulated_time > ms_per_render)
         {
-            std::cout << "rendere" << std::endl;
-            //render(entities, ms_per_render);
+            render(entities, ms_per_render);
             accumulated_time -= ms_per_render;
         }
     };
@@ -41,17 +40,17 @@ public:
         {
             for (auto& component : entity.components)
             {
-                if (component.Type() == ComponentType::Drawable)
+                if (component->Type() == ComponentType::Drawable)
                 {
-                    auto drawable = dynamic_cast<DrawableComponent&>(component);
-                    //curses.stdscr.Write(drawable.c, {drawable.x, drawable.y});
+                    auto drawable = dynamic_cast<DrawableComponent*>(component.get());
+                    curses.stdscr.Write(drawable->c, {drawable->x, drawable->y});
                 }
             }
         }
-        //curses.refresh();
+        curses.refresh();
     }
 private:
-    //TUI::Curses curses;
+    TUI::Curses curses;
     ms ms_per_render;
     ms accumulated_time;
 };
