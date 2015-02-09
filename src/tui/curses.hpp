@@ -20,7 +20,7 @@ namespace TUI
         void refresh(void);
         void echo(bool enable);
         void raw(bool enable);
-        void cursor(Visibility level); // finish this with curs_set and then do other stuff in rendering system
+        void cursor(Visibility level);
 
         Window stdscr;
     };

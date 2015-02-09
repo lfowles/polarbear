@@ -12,15 +12,26 @@ class SystemManager
 public:
     SystemManager(void) = default;
     SystemManager(double max_update_rate) : ms_per_update(1000.0/max_update_rate), accumulated_time(0.0) {};
-    void AddSystem(std::unique_ptr<System>& system)
+    void AddSystem(std::shared_ptr<System>& system)
     {
         systems.push_back(std::move(system));
     };
+
+    void AddSystem(std::shared_ptr<System>&& system)
+    {
+        systems.push_back(std::move(system));
+    };
+
+    void AddSystem(System*&& system)
+    {
+        systems.push_back(std::shared_ptr<System>(system));
+    }
 
     void AddEntity(Entity& entity)
     {
         entities.push_back(std::move(entity));
     };
+
     void update(ms time_elapsed)
     {
         accumulated_time += time_elapsed;
@@ -36,7 +47,7 @@ public:
 
     void SetMaxUpdateRate(double max_update_rate) { ms_per_update = ms(1.0/max_update_rate); };
 private:
-    std::vector<std::unique_ptr<System>> systems;
+    std::vector<std::shared_ptr<System>> systems;
     std::vector<Entity> entities;
     ms ms_per_update;
     ms accumulated_time;

@@ -10,6 +10,7 @@ constexpr int MAXIMUM_HZ = 100;
 #include "entity.hpp"
 #include "event.hpp"
 #include "systemmanager.hpp"
+#include "systems.hpp"
 
 class SuspendedMagic
 {
@@ -20,8 +21,8 @@ private:
     bool running;
     std::vector<Entity> entities;
     SystemManager systems;
-    std::queue<Event> events[2];
-    int current_queue;
+    EventDispatch dispatch;
+    std::shared_ptr<GameEngineSystem> engine_system;
 };
 
 #endif // _GAME_GAME_HPP_

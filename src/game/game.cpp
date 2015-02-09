@@ -12,8 +12,12 @@ void SuspendedMagic::Init(void)
 {
     systems.SetMaxUpdateRate(UPDATE_HZ);
 
-    auto rendering_system = std::unique_ptr<System>(new RenderSystem(RENDER_HZ));
-    systems.AddSystem(rendering_system);
+    auto rendering_system = new CursesRenderSystem(&dispatch, RENDER_HZ);
+    systems.AddSystem(std::unique_ptr<System>(rendering_system));
+
+    auto input_system = new CursesInputSystem(&dispatch, rendering_system->Stdscr());
+    //systems.AddSystem(std::unique_ptr<System>(input_system));
+    systems.AddSystem(input_system);
 
     Entity a, b, c;
     auto d = std::unique_ptr<Component>(new DrawableComponent ('|', 20, 20));
@@ -41,8 +45,6 @@ void SuspendedMagic::Run(void)
     running = true;
     time previous = clock::now();
 
-    int ctr = 0;
-    double arr[100000];
     while (running)
     {
         time current = clock::now();
@@ -53,6 +55,12 @@ void SuspendedMagic::Run(void)
 
         systems.update(elapsed);
 
+        try
+        {
+            dispatch.DispatchAll();
+        } catch (EndGame& e) {
+            running = false;
+        }
 
         ms sleep_time = ms_per_loop - duration_cast<ms>(clock::now() - current);
         if (sleep_time.count() > 0)
@@ -63,11 +71,6 @@ void SuspendedMagic::Run(void)
 //            FD_ZERO(&readfds);
 //            FD_SET(STDIN_FILENO, &readfds);
 //            select(STDIN_FILENO+1, &readfds, nullptr, nullptr, &block_for);
-        }
-        arr[ctr] = elapsed.count();
-        if (++ctr > 100000)
-        {
-            running = false;
         }
     }
 }

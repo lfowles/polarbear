@@ -30,4 +30,9 @@ public:
     int x, y;
 };
 
+class SpriteComponent : public Component
+{
+
+};
+
 #endif // _GAME_COMPONENTS_HPP_
