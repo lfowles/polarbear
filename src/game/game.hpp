@@ -11,6 +11,7 @@ constexpr int MAXIMUM_HZ = 100;
 #include "event.hpp"
 #include "systemmanager.hpp"
 #include "systems.hpp"
+#include "scene.hpp"
 
 class SuspendedMagic
 {
