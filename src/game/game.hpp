@@ -23,6 +23,7 @@ private:
     SystemManager systems;
     EventDispatch dispatch;
     std::shared_ptr<GameEngineSystem> engine_system;
+    void handle_quit(EventPtr& event);
 };
 
 #endif // _GAME_GAME_HPP_

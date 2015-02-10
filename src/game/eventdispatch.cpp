@@ -7,41 +7,48 @@ void EventDispatch::DispatchAll(void)
     {
         // Will create the empty vector if it doesn't exist,
         // but there are a fixed number of event types, so this is OK
-        auto evt_type = queue.Peek();
         auto event = queue.GetNextEvent();
-        if (evt_type == EventType::Input)
-        {
-            auto input_event = std::static_pointer_cast<InputEvent>(event);
-            if (input_event->key == (int)'q')
-            {
-                throw(EndGame("Stop the game."));
-            }
-        }
-        auto systems = dispatch[evt_type];
-        for (auto& system : systems)
-        {
-            system->handle(event);
-        }
+        SendEvent(event);
     }
 }
 
-// Taking a raw pointer here. System will have to make sure to call Unregister on destruction......
-void EventDispatch::Register(EventType type, System* system)
+void EventDispatch::Register(EventType type, System &system)
 {
-    dispatch[type].push_back(system);
+    EventDelegate delegate = std::bind(&System::handle, &system, std::placeholders::_1);
+    Register(type, delegate);
 }
 
-void EventDispatch::Unregister(EventType type, System* system)
+void EventDispatch::Register(EventType type, EventDelegate &delegate)
 {
-    auto pos = std::find(dispatch[type].begin(), dispatch[type].end(), system);
-    dispatch[type].erase(pos);
-};
+    dispatch[type].push_back(delegate);
+}
 
-void EventDispatch::SendEvent(EventPtr &event)
+void EventDispatch::Unregister(EventType type, System &system)
 {
-    auto systems = dispatch[event->type];
-    for (auto& system : systems)
+    EventDelegate delegate = std::bind(&System::handle, &system, std::placeholders::_1);
+    Unregister(type, delegate);
+}
+
+void EventDispatch::Unregister(EventType type, EventDelegate &delegate)
+{
+    auto delegates = dispatch[type];
+    auto index = 0;
+    for (auto stored_delegate : delegates)
     {
-        system->handle(event);
+        if (delegate.target<void(EventPtr&)>() == stored_delegate.target<void(EventPtr&)>())
+        {
+            delegates.erase(delegates.begin()+index);
+            break;
+        }
+        index++;
+    }
+}
+
+void EventDispatch::SendEvent(EventPtr& event)
+{
+    auto delegates = dispatch[event->type];
+    for (auto& delegate : delegates)
+    {
+        delegate(event);
     }
 }

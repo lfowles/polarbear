@@ -10,6 +10,8 @@
 
 void SuspendedMagic::Init(void)
 {
+    EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);
+    dispatch.Register(EventType::Input, delegate);
     systems.SetMaxUpdateRate(UPDATE_HZ);
 
     auto rendering_system = new CursesRenderSystem(&dispatch, RENDER_HZ);
@@ -72,5 +74,14 @@ void SuspendedMagic::Run(void)
 //            FD_SET(STDIN_FILENO, &readfds);
 //            select(STDIN_FILENO+1, &readfds, nullptr, nullptr, &block_for);
         }
+    }
+}
+
+void SuspendedMagic::handle_quit(EventPtr &event)
+{
+    auto input_event = std::dynamic_pointer_cast<InputEvent>(event);
+    if (input_event->key == (int)'q')
+    {
+        running = false;
     }
 }

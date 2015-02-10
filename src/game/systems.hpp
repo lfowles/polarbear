@@ -11,8 +11,8 @@
 
 #include "helpers.hpp"
 
-class Event;
-using EventPtr = std::shared_ptr<Event>;
+//class Event;
+//using EventPtr = std::shared_ptr<Event>;
 
 class System
 {
@@ -84,7 +84,8 @@ public:
     {
         while (input.has_input())
         {
-            dispatch->QueueEvent(std::make_shared<InputEvent>(new InputEvent(input.read())));
+            auto event = EventPtr(new InputEvent(input.read()));
+            dispatch->QueueEvent(event);
         }
     };
 private:

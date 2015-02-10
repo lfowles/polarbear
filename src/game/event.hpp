@@ -2,6 +2,7 @@
 #define _GAME_EVENT_HPP_
 
 #include <algorithm>
+#include <functional>
 #include <map>
 #include <memory>
 #include <queue>
@@ -18,6 +19,7 @@ enum class EventType
 class Event
 {
 public:
+    virtual ~Event() {};
     Event(EventType type): type(type) {};
     EventType type;
 };
@@ -51,23 +53,28 @@ private:
 
 using EndGame = std::runtime_error;
 
+using EventDelegate = std::function<void(EventPtr&)>;
+
 class System;
 class EventDispatch
 {
 public:
     void DispatchAll(void);
 
-    // Taking a raw pointer here. System will have to make sure to call Unregister on destruction......
-    void Register(EventType type, System* system);
-    // Yeah, don't use this yet.....
-    void Unregister(EventType type, System* system);
+    void Register(EventType type, System& system);
+    void Register(EventType type, EventDelegate& delegate);
+
+    void Unregister(EventType type, System& system);
+    void Unregister(EventType type, EventDelegate& delegate);
+
     void QueueEvent(EventPtr& event) {queue.SendEvent(event); };
 
     void SendEvent(EventPtr& event);
 
 private:
     EventQueue queue;
-    std::map<EventType, std::vector<System*>> dispatch;
+    std::map<EventType, std::vector<EventDelegate>> dispatch;
+//    std::map<EventType, std::vector<System*>> dispatch;
 };
 
 #endif //_GAME_EVENT_HPP_
