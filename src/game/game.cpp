@@ -7,11 +7,14 @@
 #include <algorithm>
 
 #include "helpers.hpp"
-
+#include "mainmenuscene.hpp"
 void SuspendedMagic::Init(void)
 {
+    MainMenuScene scene;
+    scenemanager.PushScene(scene);
+
     EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);
-    dispatch.Register(EventType::Input, delegate);
+    dispatch.Register(EventType::EndGame, delegate);
     systems.SetMaxUpdateRate(UPDATE_HZ);
 
     auto rendering_system = new CursesRenderSystem(&dispatch, RENDER_HZ);
@@ -22,15 +25,15 @@ void SuspendedMagic::Init(void)
     systems.AddSystem(input_system);
 
     Entity a, b, c;
-    auto d = std::unique_ptr<Component>(new DrawableComponent ('|', 20, 20));
+    auto d = std::unique_ptr<Component>(new DrawableComponent ('[', 1, 1));
     a.AddComponent(d);
     systems.AddEntity(a);
 
-    auto e = std::unique_ptr<Component>(new DrawableComponent('_', 21, 20));
+    auto e = std::unique_ptr<Component>(new DrawableComponent('X', 1+19*2, 20));
     b.AddComponent(e);
     systems.AddEntity(b);
 
-    auto f = std::unique_ptr<Component>(new DrawableComponent('|', 22, 20));
+    auto f = std::unique_ptr<Component>(new DrawableComponent(']', 2, 1));
     c.AddComponent(f);
     systems.AddEntity(c);
 }
@@ -79,9 +82,5 @@ void SuspendedMagic::Run(void)
 
 void SuspendedMagic::handle_quit(EventPtr &event)
 {
-    auto input_event = std::dynamic_pointer_cast<InputEvent>(event);
-    if (input_event->key == (int)'q')
-    {
-        running = false;
-    }
+    running = false;
 }

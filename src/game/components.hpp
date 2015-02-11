@@ -32,7 +32,9 @@ public:
 
 class SpriteComponent : public Component
 {
-
+public:
+    std::vector<std::vector<int>> sprite;
+    int transparent;
 };
 
 #endif // _GAME_COMPONENTS_HPP_

@@ -6,11 +6,12 @@
 class Scene
 {
 public:
+    virtual ~Scene() {};
     virtual void Init(void) {};
     virtual void Pause(void) {};
     virtual void Resume(void) {};
     virtual void Update(ms elapsed) {};
-
+    virtual void Destroy(void) {};
 };
 
 class SceneManager
@@ -19,27 +20,35 @@ public:
     void SetScene(Scene &scene)
     {
         if (stack.size() > 0) {
-            stack[0] = scene;
-        } else {
-            stack.push_back(scene);
+            stack.back().Destroy();
+            stack.pop_back();
         }
+        stack.push_back(scene);
+        stack.back().Init();
     };
 
     void PushScene(Scene &scene)
     {
+        stack.back().Pause();
         stack.push_back(scene);
+        stack.back().Init();
     };
 
     void PopScene(void)
     {
-        stack.erase(stack.begin());
+        stack.back().Destroy();
+        stack.pop_back();
+        if (stack.size() > 0)
+        {
+            stack.back().Resume();
+        }
     };
 
     void Update(ms elapsed)
     {
         if (stack.size() > 0)
         {
-            stack[0].Update(elapsed);
+            stack.back().Update(elapsed);
         }
     };
 private:

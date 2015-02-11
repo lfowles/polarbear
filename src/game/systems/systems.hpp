@@ -4,12 +4,13 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include "entity.hpp"
-#include "event.hpp"
+#include <game/entity.hpp>
+#include <game/event.hpp>
 #include "tui/curses.hpp"
 #include "tui/input.hpp"
 
-#include "helpers.hpp"
+
+#include <game/helpers.hpp>
 
 //class Event;
 //using EventPtr = std::shared_ptr<Event>;

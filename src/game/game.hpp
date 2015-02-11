@@ -9,8 +9,8 @@ constexpr int MAXIMUM_HZ = 100;
 
 #include "entity.hpp"
 #include "event.hpp"
-#include "systemmanager.hpp"
-#include "systems.hpp"
+#include "systems/systemmanager.hpp"
+#include "systems/systems.hpp"
 #include "scene.hpp"
 
 class SuspendedMagic
@@ -25,6 +25,7 @@ private:
     EventDispatch dispatch;
     std::shared_ptr<GameEngineSystem> engine_system;
     void handle_quit(EventPtr& event);
+    SceneManager scenemanager;
 };
 
 #endif // _GAME_GAME_HPP_
