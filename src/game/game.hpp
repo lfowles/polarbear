@@ -1,9 +1,6 @@
 #ifndef _GAME_GAME_HPP_
 #define _GAME_GAME_HPP_
 
-constexpr int UPDATE_HZ = 60;
-constexpr int RENDER_HZ = 30;
-constexpr int MAXIMUM_HZ = 100;
 
 #include <queue>
 
@@ -20,10 +17,8 @@ public:
     void Init(void);
 private:
     bool running;
-    std::vector<Entity> entities;
-    SystemManager systems;
     EventDispatch dispatch;
-    std::shared_ptr<GameEngineSystem> engine_system;
+    //std::shared_ptr<GameEngineSystem> engine_system;
     void handle_quit(EventPtr& event);
     SceneManager scenemanager;
 };

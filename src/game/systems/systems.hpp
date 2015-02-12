@@ -7,6 +7,7 @@
 #include <game/entity.hpp>
 #include <game/event.hpp>
 #include "tui/curses.hpp"
+#include <game/cursessingleton.hpp>
 #include "tui/input.hpp"
 
 
@@ -30,12 +31,13 @@ class CursesRenderSystem : public System
 {
 public:
     CursesRenderSystem(EventDispatch* dispatch, double max_render_rate) :
-            System(dispatch), ms_per_render(1000.0/max_render_rate), accumulated_time(0.0)
+            System(dispatch), ms_per_render(1000.0/max_render_rate), accumulated_time(0.0),
+            curses(CursesSingleton::GetCurses())
     {
-        curses.raw(true);
-        curses.echo(false);
-        curses.refresh();
-        curses.cursor(TUI::Curses::Visibility::Invisible);
+        curses->raw(true);
+        curses->echo(false);
+        curses->refresh();
+        curses->cursor(TUI::Curses::Visibility::Invisible);
     }
 
     virtual void update(std::vector<Entity>& entities, ms time_elapsed)
@@ -57,20 +59,20 @@ public:
                 if (component->Type() == ComponentType::Drawable)
                 {
                     auto drawable = dynamic_cast<DrawableComponent*>(component.get());
-                    curses.stdscr.Write(drawable->c, {drawable->x, drawable->y});
+                    curses->stdscr.Write(drawable->c, {drawable->x, drawable->y});
                 }
             }
         }
-        curses.refresh();
+        curses->refresh();
     }
 
     TUI::Window& Stdscr(void)
     {
-        return curses.stdscr;
+        return curses->stdscr;
     }
 
 private:
-    TUI::Curses curses;
+    CursesPtr curses;
     ms ms_per_render;
     ms accumulated_time;
 };

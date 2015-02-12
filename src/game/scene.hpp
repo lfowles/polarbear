@@ -1,6 +1,8 @@
 #ifndef _GAME_SCENE_HPP_
 #define _GAME_SCENE_HPP_
 
+#include <memory>
+
 #include "helpers.hpp"
 // Holds entitymanager, systemmanager, etc
 class Scene
@@ -14,33 +16,38 @@ public:
     virtual void Destroy(void) {};
 };
 
+using ScenePtr = std::shared_ptr<Scene>;
+
 class SceneManager
 {
 public:
-    void SetScene(Scene &scene)
+    void SetScene(ScenePtr scene)
     {
         if (stack.size() > 0) {
-            stack.back().Destroy();
+            stack.back()->Destroy();
             stack.pop_back();
         }
         stack.push_back(scene);
-        stack.back().Init();
+        stack.back()->Init();
     };
 
-    void PushScene(Scene &scene)
+    void PushScene(ScenePtr scene)
     {
-        stack.back().Pause();
+        if (stack.size() > 0)
+        {
+            stack.back()->Pause();
+        }
         stack.push_back(scene);
-        stack.back().Init();
+        stack.back()->Init();
     };
 
     void PopScene(void)
     {
-        stack.back().Destroy();
+        stack.back()->Destroy();
         stack.pop_back();
         if (stack.size() > 0)
         {
-            stack.back().Resume();
+            stack.back()->Resume();
         }
     };
 
@@ -48,11 +55,11 @@ public:
     {
         if (stack.size() > 0)
         {
-            stack.back().Update(elapsed);
+            stack.back()->Update(elapsed);
         }
     };
 private:
-    std::vector<Scene> stack;
+    std::vector<ScenePtr> stack;
 };
 
 #endif // _GAME_SCENE_HPP_
