@@ -2,11 +2,11 @@
 #define _GAME_CURSESSINGLETON_HPP_
 
 #include <memory>
-#include "tui/curses.hpp"
+#include <swears/curses.hpp>
 //#include "tui/input.hpp"
 
-using CursesPtr = std::shared_ptr<TUI::Curses>;
-//using CursesInputPtr = std::shared_ptr<TUI::Input>;
+using CursesPtr = std::shared_ptr<Swears::Curses>;
+//using CursesInputPtr = std::shared_ptr<Swears::Input>;
 class CursesSingleton
 {
     public:
@@ -16,7 +16,7 @@ class CursesSingleton
             auto curses = GetCurses();
             if (!input_ptr)
             {
-                input_ptr = std::make_shared<TUI::Input>(curses->stdscr);
+                input_ptr = std::make_shared<Swears::Input>(curses->stdscr);
             }
             return input_ptr;
         };

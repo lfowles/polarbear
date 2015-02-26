@@ -38,7 +38,7 @@ public:
         curses->raw(true);
         curses->echo(false);
         curses->refresh();
-        curses->cursor(TUI::Curses::Visibility::Invisible);
+        curses->Cursor(Swears::Curses::Visibility::Invisible);
     }
 
     virtual void update(std::vector<Entity>& entities, ms time_elapsed)
