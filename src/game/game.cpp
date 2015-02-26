@@ -6,36 +6,16 @@
 #include <iostream>
 #include <algorithm>
 
+#include "config.hpp"
 #include "helpers.hpp"
 #include "mainmenuscene.hpp"
 void SuspendedMagic::Init(void)
 {
-    MainMenuScene scene;
-    scenemanager.PushScene(scene);
-
     EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);
     dispatch.Register(EventType::EndGame, delegate);
-    systems.SetMaxUpdateRate(UPDATE_HZ);
 
-    auto rendering_system = new CursesRenderSystem(&dispatch, RENDER_HZ);
-    systems.AddSystem(std::unique_ptr<System>(rendering_system));
-
-    auto input_system = new CursesInputSystem(&dispatch, rendering_system->Stdscr());
-    //systems.AddSystem(std::unique_ptr<System>(input_system));
-    systems.AddSystem(input_system);
-
-    Entity a, b, c;
-    auto d = std::unique_ptr<Component>(new DrawableComponent ('[', 1, 1));
-    a.AddComponent(d);
-    systems.AddEntity(a);
-
-    auto e = std::unique_ptr<Component>(new DrawableComponent('X', 1+19*2, 20));
-    b.AddComponent(e);
-    systems.AddEntity(b);
-
-    auto f = std::unique_ptr<Component>(new DrawableComponent(']', 2, 1));
-    c.AddComponent(f);
-    systems.AddEntity(c);
+    //MainMenuScene scene(dispatch);
+    scenemanager.PushScene(std::make_shared<MainMenuScene>(dispatch));
 }
 
 void SuspendedMagic::Run(void)
@@ -56,16 +36,9 @@ void SuspendedMagic::Run(void)
         ms elapsed = current - previous;
         previous = current;
 
-        // processInput();
+        scenemanager.Update(elapsed);
 
-        systems.update(elapsed);
-
-        try
-        {
-            dispatch.DispatchAll();
-        } catch (EndGame& e) {
-            running = false;
-        }
+        dispatch.DispatchAll();
 
         ms sleep_time = ms_per_loop - duration_cast<ms>(clock::now() - current);
         if (sleep_time.count() > 0)
