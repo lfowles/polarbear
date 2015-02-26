@@ -6,8 +6,8 @@
 #include <vector>
 #include <game/entity.hpp>
 #include <game/event.hpp>
-#include "tui/curses.hpp"
-#include "tui/input.hpp"
+#include <swears/curses.hpp>
+#include <swears/input.hpp>
 
 
 #include <game/helpers.hpp>
@@ -35,7 +35,7 @@ public:
         curses.raw(true);
         curses.echo(false);
         curses.refresh();
-        curses.cursor(TUI::Curses::Visibility::Invisible);
+        curses.Cursor(Swears::Curses::Visibility::Invisible);
     }
 
     virtual void update(std::vector<Entity>& entities, ms time_elapsed)
@@ -64,13 +64,13 @@ public:
         curses.refresh();
     }
 
-    TUI::Window& Stdscr(void)
+    Swears::Window& Stdscr(void)
     {
         return curses.stdscr;
     }
 
 private:
-    TUI::Curses curses;
+    Swears::Curses curses;
     ms ms_per_render;
     ms accumulated_time;
 };
@@ -78,7 +78,7 @@ private:
 class CursesInputSystem : public System
 {
 public:
-    CursesInputSystem(EventDispatch* dispatch, TUI::Window& window) :
+    CursesInputSystem(EventDispatch* dispatch, Swears::Window& window) :
             System(dispatch), input(window) {};
 
     virtual void update(std::vector<Entity> &entities, ms time_elapsed)
@@ -90,7 +90,7 @@ public:
         }
     };
 private:
-    TUI::Input input;
+    Swears::Input input;
 };
 
 class GameEngineSystem : public System

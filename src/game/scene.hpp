@@ -29,7 +29,10 @@ public:
 
     void PushScene(Scene &scene)
     {
-        stack.back().Pause();
+        if (stack.size() > 0)
+        {
+            stack.back().Pause();
+        }
         stack.push_back(scene);
         stack.back().Init();
     };
