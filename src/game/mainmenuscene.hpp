@@ -14,26 +14,44 @@ public:
     {
         systems.SetMaxUpdateRate(UPDATE_HZ);
         auto rendering_system = new CursesRenderSystem(dispatch, RENDER_HZ);
-        systems.AddSystem(std::unique_ptr<System>(rendering_system));
+        systems.AddSystem(rendering_system);
 
         auto input_system = new CursesInputSystem(dispatch, rendering_system->Stdscr());
         //systems.AddSystem(std::unique_ptr<System>(input_system));
         systems.AddSystem(input_system);
 
+        auto keyboard_system = new KeyboardControllerSystem(dispatch);
+        systems.AddSystem(keyboard_system);
+
         Entity a, b, c;
-        auto d = std::unique_ptr<Component>(new DrawableComponent ('[', 1, 1));
-        a.AddComponent(d);
+        {
+            auto pos = std::unique_ptr<Component>(new PositionComponent(1, 1));
+            auto sprite = std::unique_ptr<Component>(new SpriteComponent('a'));
+            auto movement = std::unique_ptr<Component>(new KeyboardControlledMovementComponent(1));
+            a.AddComponent(pos);
+            a.AddComponent(sprite);
+            a.AddComponent(movement);
+        }
+
+        {
+            auto pos = std::unique_ptr<Component>(new PositionComponent(1 + 19 * 2, 20));
+            auto sprite = std::unique_ptr<Component>(new SpriteComponent(2,2,{'a','b','c','d'},0x00));
+
+            b.AddComponent(pos);
+            b.AddComponent(sprite);
+        }
+
+        {
+            auto pos = std::unique_ptr<Component>(new PositionComponent(2, 1));
+            auto sprite = std::unique_ptr<Component>(new SpriteComponent(2,2,{'d','a','c','d'},0x00));
+
+            c.AddComponent(pos);
+            c.AddComponent(sprite);
+        }
+
         systems.AddEntity(a);
-
-        auto e = std::unique_ptr<Component>(new DrawableComponent('J', 1+19*2, 20));
-        b.AddComponent(e);
         systems.AddEntity(b);
-
-        auto f = std::unique_ptr<Component>(new DrawableComponent('N', 2, 1));
-        c.AddComponent(f);
         systems.AddEntity(c);
-
-
     };
 
     virtual void Pause(void) {};

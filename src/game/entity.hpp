@@ -13,6 +13,18 @@ public:
     {
         components.push_back(std::move(component));
     }
+
+    Component* GetComponent(ComponentType type)
+    {
+        for (auto& component : components)
+        {
+            if (component->Type() == type)
+            {
+                return component.get();
+            }
+        }
+        return nullptr;
+    }
     std::vector<std::unique_ptr<Component>> components;
 };
 

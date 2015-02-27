@@ -6,7 +6,9 @@
 enum class ComponentType
 {
     None,
-    Drawable,
+    Position,
+    Sprite,
+    KeyboardControlledMovement,
     Fake
 };
 
@@ -21,20 +23,35 @@ private:
     ComponentType type;
 };
 
-class DrawableComponent : public Component
+class PositionComponent : public Component
 {
 public:
-    DrawableComponent(char c, int x, int y) : Component(ComponentType::Drawable), c(c), x(x), y(y) {};
-
-    char c;
-    int x, y;
+    PositionComponent(float x, float y) : Component(ComponentType::Position), x(x), y(y) {};
+    float x, y;
 };
 
 class SpriteComponent : public Component
 {
 public:
-    std::vector<std::vector<int>> sprite;
-    int transparent;
+    SpriteComponent(int w, int h, const std::vector<int>& sprite, int transparent) :
+            Component(ComponentType::Sprite), width(w), height(h),
+            sprite_chars(sprite), transparent_char(transparent) {};
+    SpriteComponent(int c) :
+            Component(ComponentType::Sprite), width(1), height(1),
+            sprite_chars(1, c), transparent_char(0x00) {};
+    int width;
+    int height;
+    std::vector<int> sprite_chars;
+    int transparent_char;
+};
+
+class KeyboardControlledMovementComponent : public Component
+{
+public:
+    KeyboardControlledMovementComponent(int mag) :
+            Component(ComponentType::KeyboardControlledMovement), magnitude(mag) {};
+
+    int magnitude;
 };
 
 #endif // _GAME_COMPONENTS_HPP_
