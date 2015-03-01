@@ -1,4 +1,4 @@
-#include <game/cursessingleton.hpp>
+#include <polarbear/cursessingleton.hpp>
 
 CursesPtr& CursesSingleton::GetCurses(void)
 {

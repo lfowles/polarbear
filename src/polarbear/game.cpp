@@ -1,4 +1,4 @@
-#include "game.hpp"
+#include <polarbear/game.hpp>
 
 #include <chrono>
 #include <memory>
@@ -6,9 +6,9 @@
 #include <iostream>
 #include <algorithm>
 
-#include "config.hpp"
-#include "helpers.hpp"
-#include "mainmenuscene.hpp"
+#include <polarbear/config.hpp>
+#include <polarbear/helpers.hpp>
+#include <polarbear/mainmenuscene.hpp>
 void SuspendedMagic::Init(void)
 {
     EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);

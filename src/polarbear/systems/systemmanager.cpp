@@ -1,4 +1,4 @@
-#include "systemmanager.hpp"
+#include <polarbear/systems/systemmanager.hpp>
 
 void SystemManager::AddSystem(std::shared_ptr<System>& system)
 {

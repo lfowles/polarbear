@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 #include "systems.hpp"
-#include <game/entity.hpp>
-#include <game/helpers.hpp>
+#include "../entity.hpp"
+#include "../helpers.hpp"
 
 class SystemManager
 {

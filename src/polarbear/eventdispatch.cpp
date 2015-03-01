@@ -1,5 +1,5 @@
-#include "event.hpp"
-#include "systems/systems.hpp"
+#include <polarbear/event.hpp>
+#include <polarbear/systems/systems.hpp>
 
 void EventDispatch::DispatchAll(void)
 {

@@ -1,4 +1,4 @@
-#include "game/game.hpp"
+#include <polarbear/game.hpp>
 
 int main()
 {

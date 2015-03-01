@@ -1,0 +1,3 @@
+[submodule "swears"]
+	path = libraries/swears
+	url = https://github.com/lfowles/swears.git

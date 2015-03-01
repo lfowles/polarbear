@@ -4,15 +4,15 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include <game/entity.hpp>
-#include <game/event.hpp>
+#include "../entity.hpp"
+#include "../event.hpp"
 #include <swears/curses.hpp>
 #include <swears/input.hpp>
-#include <game/cursessingleton.hpp>
+#include "../cursessingleton.hpp"
 
 
 
-#include <game/helpers.hpp>
+#include <polarbear/helpers.hpp>
 
 //class Event;
 //using EventPtr = std::shared_ptr<Event>;
@@ -152,6 +152,7 @@ public:
                     pos->y -= magnitude;
                     break;
                 case 'a':
+
                     pos->x -= magnitude;
                     break;
                 case 's':
