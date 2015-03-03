@@ -3,6 +3,9 @@
 
 // instead of a scene graph, have components like "AttachedTo(parent)", etc
 
+#include <string>
+#include <vector>
+
 enum class ComponentType
 {
     None,
@@ -39,6 +42,7 @@ public:
     SpriteComponent(int c) :
             Component(ComponentType::Sprite), width(1), height(1),
             sprite_chars(1, c), transparent_char(0x00) {};
+    SpriteComponent(std::string filename);
     int width;
     int height;
     std::vector<int> sprite_chars;

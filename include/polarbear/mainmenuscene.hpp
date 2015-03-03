@@ -26,7 +26,7 @@ public:
         Entity a, b, c;
         {
             auto pos = std::unique_ptr<Component>(new PositionComponent(1, 1));
-            auto sprite = std::unique_ptr<Component>(new SpriteComponent('a'));
+            auto sprite = std::unique_ptr<Component>(new SpriteComponent("/home/landon/ClionProjects/suspended-magic/test.sprite"));
             auto movement = std::unique_ptr<Component>(new KeyboardControlledMovementComponent(1));
             a.AddComponent(pos);
             a.AddComponent(sprite);

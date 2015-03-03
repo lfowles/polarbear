@@ -7,6 +7,7 @@ project(polarbear)
 set(SOURCE_FILES game.cpp
                  render.cpp
                  eventdispatch.cpp
+                 components.cpp
                  cursessingleton.cpp
                  systems/systemmanager.cpp)
 add_library(polarbear SHARED ${SOURCE_FILES})
