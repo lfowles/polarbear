@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <swears/widgets/widget.hpp>
 
 enum class ComponentType
 {
@@ -12,6 +13,8 @@ enum class ComponentType
     Position,
     Sprite,
     KeyboardControlledMovement,
+    Widget,
+    Size,
     Fake
 };
 
@@ -29,9 +32,18 @@ private:
 class PositionComponent : public Component
 {
 public:
-    PositionComponent(float x, float y) : Component(ComponentType::Position), x(x), y(y) {};
+    PositionComponent(float x, float y) : Component(ComponentType::Position), x(x), y(y), z(0.0f) {};
+    PositionComponent(float x, float y, float z) : Component(ComponentType::Position), x(x), y(y), z(z) {};
+    float x, y, z;
+};
+
+class SizeComponent : public Component
+{
+public:
+    SizeComponent(float x, float y) : Component(ComponentType::Size), x(x), y(y) {};
     float x, y;
 };
+
 
 class SpriteComponent : public Component
 {
@@ -56,6 +68,20 @@ public:
             Component(ComponentType::KeyboardControlledMovement), magnitude(mag) {};
 
     int magnitude;
+};
+
+class WidgetComponent : public Component
+{
+public:
+    WidgetComponent(std::unique_ptr<Swears::Widget>& static_widget, std::unique_ptr<Swears::Widget>& widget) :
+            Component(ComponentType::Widget), static_widget(std::move(static_widget)), child(std::move(widget))
+    {
+        this->child->SetParent(this->static_widget.get());
+    };
+
+    std::unique_ptr<Swears::Widget> static_widget;
+    std::unique_ptr<Swears::Widget> child;
+
 };
 
 #endif // _GAME_COMPONENTS_HPP_

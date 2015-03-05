@@ -12,7 +12,7 @@
 void SuspendedMagic::Init(void)
 {
     EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);
-    dispatch.Register(EventType::EndGame, delegate);
+    dispatch.Register(EventType::Input, delegate);
 
     //MainMenuScene scene(dispatch);
     scenemanager.PushScene(std::make_shared<MainMenuScene>(dispatch));
@@ -55,5 +55,9 @@ void SuspendedMagic::Run(void)
 
 void SuspendedMagic::handle_quit(EventPtr &event)
 {
-    running = false;
+    auto input_event = std::dynamic_pointer_cast<InputEvent>(event);
+    if (input_event->key == 'q')
+    {
+        running = false;
+    }
 }
