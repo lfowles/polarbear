@@ -30,7 +30,7 @@ public:
         Entity a, b, c, widget;
         {
             auto pos = std::unique_ptr<Component>(new PositionComponent(0, 0, 1));
-            auto sprite = std::unique_ptr<Component>(new SpriteComponent("test.sprite"));
+            auto sprite = std::unique_ptr<Component>(new SpriteComponent(RESOURCE_PATH "test.sprite"));
             auto movement = std::unique_ptr<Component>(new KeyboardControlledMovementComponent(1));
             a.AddComponent(pos);
             a.AddComponent(sprite);

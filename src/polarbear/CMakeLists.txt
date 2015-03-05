@@ -15,6 +15,7 @@ target_link_libraries(polarbear swears)
 target_include_directories(polarbear PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include/>
     $<INSTALL_INTERFACE:include/>)
+target_compile_definitions(polarbear PUBLIC "-DRESOURCE_PATH=\"${CMAKE_SOURCE_DIR}/resources/\"")
 
 install(TARGETS polarbear EXPORT polarbear
         LIBRARY DESTINATION lib
