@@ -250,12 +250,12 @@ public:
                 selected_row = input_event->key-'a';
             } else if (input_event->key >= '1' and input_event->key <= '9') {
                 selected_col = input_event->key-'1';
+            } else if (input_event->key == KEY_LEFT) {
+                selected_col = (selected_col+8) % 9; // +8, because % is more of a remainder than modulo
             } else if (input_event->key == KEY_RIGHT) {
                 selected_col = (selected_col+1) % 9;
-            } else if (input_event->key == KEY_LEFT) {
-                selected_col = (selected_col-1) % 9;
             } else if (input_event->key == KEY_UP) {
-                selected_row = (selected_row-1) % 9;
+                selected_row = (selected_row+8) % 9; // +8, because % is more of a remainder than modulo
             } else if (input_event->key == KEY_DOWN) {
                 selected_row = (selected_row+1) % 9;
             }
