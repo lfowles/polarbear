@@ -62,22 +62,22 @@ public:
         std::vector<std::pair<SpriteComponent*, PositionComponent*>> to_draw;
         for (auto& entity : entities)
         {
-            auto pos = dynamic_cast<PositionComponent *>(entity.GetComponent(ComponentType::Position));
+            auto pos = entity.Get<PositionComponent>();
             if (pos == nullptr)
             {
                 continue;
             }
 
-            auto sprite = dynamic_cast<SpriteComponent *>(entity.GetComponent(ComponentType::Sprite));
+            auto sprite = entity.Get<SpriteComponent>();
             if (sprite != nullptr)
             {
                 to_draw.push_back({sprite, pos});
             }
 
-            auto widget = dynamic_cast<WidgetComponent *>(entity.GetComponent(ComponentType::Widget));
+            auto widget = entity.Get<WidgetComponent>();
             if (widget != nullptr)
             {
-                auto size = dynamic_cast<SizeComponent *>(entity.GetComponent(ComponentType::Size));
+                auto size = entity.Get<SizeComponent>();
                 if (size != nullptr)
                 {
                     auto size_vec = Swears::Vec2{size->x, size->y};
@@ -172,13 +172,13 @@ public:
     {
         for (auto& entity : entities)
         {
-            auto keyboard_movement = dynamic_cast<KeyboardControlledMovementComponent*>(entity.GetComponent(ComponentType::KeyboardControlledMovement));
+            auto keyboard_movement = entity.Get<KeyboardControlledMovementComponent>();
             if (keyboard_movement == nullptr)
             {
                 continue;
             }
 
-            auto pos = dynamic_cast<PositionComponent*>(entity.GetComponent(ComponentType::Position));
+            auto pos = entity.Get<PositionComponent>();
             if (pos == nullptr)
             {
                 continue;
@@ -271,25 +271,25 @@ public:
     {
         for (auto& entity : entities)
         {
-            auto cell_type = dynamic_cast<CellTypeComponent*>(entity.GetComponent(ComponentType::CellType));
+            auto cell_type = entity.Get<CellTypeComponent>();
             if (cell_type == nullptr)
             {
                 continue;
             }
 
-            auto cell_value = dynamic_cast<CellValueComponent*>(entity.GetComponent(ComponentType::CellValue));
+            auto cell_value = entity.Get<CellValueComponent>();
             if (cell_value == nullptr)
             {
                 continue;
             }
 
-            auto pos = dynamic_cast<CellPosComponent*>(entity.GetComponent(ComponentType::CellPos));
+            auto pos = entity.Get<CellPosComponent>();
             if (pos == nullptr)
             {
                 continue;
             }
 
-            auto sprite = dynamic_cast<SpriteComponent *>(entity.GetComponent(ComponentType::Sprite));
+            auto sprite = entity.Get<SpriteComponent>();
             if (sprite == nullptr)
             {
                 continue;

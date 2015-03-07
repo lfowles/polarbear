@@ -33,9 +33,9 @@ public:
 //        Entity a, b, c, widget;
         {
             Entity a;
-            auto pos = std::unique_ptr<Component>(new PositionComponent(0, 0, 1));
-            auto sprite = std::unique_ptr<Component>(new SpriteComponent(RESOURCE_PATH "test.sprite"));
-            auto movement = std::unique_ptr<Component>(new KeyboardControlledMovementComponent(1));
+            auto pos = std::unique_ptr<PositionComponent>(new PositionComponent(0, 0, 1));
+            auto sprite = std::unique_ptr<SpriteComponent>(new SpriteComponent(RESOURCE_PATH "test.sprite"));
+            auto movement = std::unique_ptr<KeyboardControlledMovementComponent>(new KeyboardControlledMovementComponent(1));
             a.AddComponent(pos);
             a.AddComponent(sprite);
             a.AddComponent(movement);
@@ -43,11 +43,11 @@ public:
         }
         {
             Entity board_highlights;
-            auto pos = std::unique_ptr<Component>(new PositionComponent(0, 0, 2));
-            auto spriteptr = new SpriteComponent(RESOURCE_PATH "test_overlay.sprite");
-            spriteptr->attr = A_BOLD;
-            auto sprite = std::unique_ptr<Component>(spriteptr);
-            auto movement = std::unique_ptr<Component>(new KeyboardControlledMovementComponent(1));
+            auto pos = std::unique_ptr<PositionComponent>(new PositionComponent(0, 0, 2));
+            auto sprite = std::unique_ptr<SpriteComponent>(new SpriteComponent(RESOURCE_PATH "test_overlay.sprite"));
+            sprite->attr = A_BOLD;
+
+            auto movement = std::unique_ptr<KeyboardControlledMovementComponent>(new KeyboardControlledMovementComponent(1));
             board_highlights.AddComponent(pos);
             board_highlights.AddComponent(sprite);
             board_highlights.AddComponent(movement);
@@ -55,7 +55,7 @@ public:
         }
         {
             Entity state;
-            auto state_component = std::unique_ptr<Component>(new StateComponent());
+            auto state_component = std::unique_ptr<StateComponent>(new StateComponent());
             state.AddComponent(state_component);
             systems.AddEntity(state);
         }
@@ -67,15 +67,15 @@ public:
             {
                 Entity cell;
                 auto x = 4*c+4;
-                auto pos = std::unique_ptr<Component>(new PositionComponent(x, y, 1));
+                auto pos = std::unique_ptr<PositionComponent>(new PositionComponent(x, y, 1));
                 cell.AddComponent(pos);
-                auto grid_pos = std::unique_ptr<Component>(new CellPosComponent(c, r));
+                auto grid_pos = std::unique_ptr<CellPosComponent>(new CellPosComponent(c, r));
                 cell.AddComponent(grid_pos);
-                auto cell_value = std::unique_ptr<Component>(new CellValueComponent(c));
+                auto cell_value = std::unique_ptr<CellValueComponent>(new CellValueComponent(c));
                 cell.AddComponent(cell_value);
-                auto sprite = std::unique_ptr<Component>(new SpriteComponent(0x30+c));
+                auto sprite = std::unique_ptr<SpriteComponent>(new SpriteComponent(0x30+c));
                 cell.AddComponent(sprite);
-                auto cell_type = std::unique_ptr<Component>(new CellTypeComponent(CellTypeComponent::CellType::Free));
+                auto cell_type = std::unique_ptr<CellTypeComponent>(new CellTypeComponent(CellTypeComponent::CellType::Free));
                 cell.AddComponent(cell_type);
                 systems.AddEntity(cell);
             }

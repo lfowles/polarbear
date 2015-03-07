@@ -7,56 +7,48 @@
 #include <vector>
 #include <swears/widgets/widget.hpp>
 
-enum class ComponentType
-{
-    None,
-    Position,
-    Sprite,
-    KeyboardControlledMovement,
-    Widget,
-    Size,
-    CellValue,
-    CellType,
-    CellPos,
-    State,
-    Fake
-};
-
 class Component
 {
 public:
-    Component(void) : Component(ComponentType::Fake) {};
-    Component(ComponentType type) : type(type) {};
+    virtual unsigned int Type(void) const = 0;
     virtual ~Component() = default;
-    virtual ComponentType Type(void) {return type;};
-private:
-    ComponentType type;
+
 };
 
-class PositionComponent : public Component
+// http://www.reddit.com/r/learnprogramming/comments/1jzlon/cwhy_exactly_is_rtti_and_typeid_bad/cbkz2mc
+static unsigned int nextType = 0;
+template <typename T>
+class BaseComponent : public Component
 {
 public:
-    PositionComponent(float x, float y) : Component(ComponentType::Position), x(x), y(y), z(0.0f) {};
-    PositionComponent(float x, float y, float z) : Component(ComponentType::Position), x(x), y(y), z(z) {};
+    virtual unsigned int Type(void) const override {return type;};
+    static const unsigned int type;
+};
+
+class PositionComponent : public BaseComponent<PositionComponent>
+{
+public:
+    PositionComponent(float x, float y) : x(x), y(y), z(0.0f) {};
+    PositionComponent(float x, float y, float z) : x(x), y(y), z(z) {};
     float x, y, z;
 };
 
-class SizeComponent : public Component
+class SizeComponent : public BaseComponent<SizeComponent>
 {
 public:
-    SizeComponent(float x, float y) : Component(ComponentType::Size), x(x), y(y) {};
+    SizeComponent(float x, float y) : x(x), y(y) {};
     float x, y;
 };
 
 
-class SpriteComponent : public Component
+class SpriteComponent : public BaseComponent<SpriteComponent>
 {
 public:
     SpriteComponent(int w, int h, const std::vector<int>& sprite, int transparent) :
-            Component(ComponentType::Sprite), width(w), height(h),
+            width(w), height(h),
             sprite_chars(sprite), transparent_char(transparent), attr(0) {};
     SpriteComponent(int c) :
-            Component(ComponentType::Sprite), width(1), height(1),
+            width(1), height(1),
             sprite_chars(1, c), transparent_char(0x00), attr(0) {};
     SpriteComponent(std::string filename);
     int width;
@@ -66,20 +58,19 @@ public:
     int attr;
 };
 
-class KeyboardControlledMovementComponent : public Component
+class KeyboardControlledMovementComponent : public BaseComponent<KeyboardControlledMovementComponent>
 {
 public:
-    KeyboardControlledMovementComponent(int mag) :
-            Component(ComponentType::KeyboardControlledMovement), magnitude(mag) {};
+    KeyboardControlledMovementComponent(int mag) : magnitude(mag) {};
 
     int magnitude;
 };
 
-class WidgetComponent : public Component
+class WidgetComponent : public BaseComponent<WidgetComponent>
 {
 public:
     WidgetComponent(std::unique_ptr<Swears::Widget>& static_widget, std::unique_ptr<Swears::Widget>& widget) :
-            Component(ComponentType::Widget), static_widget(std::move(static_widget)), child(std::move(widget))
+            static_widget(std::move(static_widget)), child(std::move(widget))
     {
         this->child->SetParent(this->static_widget.get());
     };
@@ -89,17 +80,17 @@ public:
 
 };
 
-class CellValueComponent : public Component
+class CellValueComponent : public BaseComponent<CellValueComponent>
 {
 public:
 
-    CellValueComponent(void) : Component(ComponentType::CellValue), value(0) {};
-    CellValueComponent(int val) : Component(ComponentType::CellValue), value(val) {};
+    CellValueComponent(void) : value(0) {};
+    CellValueComponent(int val) : value(val) {};
 
     int value;
 };
 
-class CellTypeComponent : public Component
+class CellTypeComponent : public BaseComponent<CellTypeComponent>
 {
 public:
     enum class CellType
@@ -108,23 +99,23 @@ public:
         Locked,
         Free
     };
-    CellTypeComponent(CellType t) : Component(ComponentType::CellType), cell_type(t) {};
+    CellTypeComponent(CellType t) : cell_type(t) {};
 
     CellType cell_type;
 };
 
-class StateComponent : public Component
+class StateComponent : public BaseComponent<StateComponent>
 {
 public:
-    StateComponent(void) : Component(ComponentType::State), selected_row(0), selected_col(0) {};
+    StateComponent(void) : selected_row(0), selected_col(0) {};
     int selected_col;
     int selected_row;
 };
 
-class CellPosComponent : public Component
+class CellPosComponent : public BaseComponent<CellPosComponent>
 {
 public:
-    CellPosComponent(int x, int y) : Component(ComponentType::CellPos), x(x), y(y) {};
+    CellPosComponent(int x, int y) : x(x), y(y) {};
     int x, y;
 };
 
