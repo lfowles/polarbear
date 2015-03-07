@@ -15,6 +15,10 @@ enum class ComponentType
     KeyboardControlledMovement,
     Widget,
     Size,
+    CellValue,
+    CellType,
+    CellPos,
+    State,
     Fake
 };
 
@@ -50,15 +54,16 @@ class SpriteComponent : public Component
 public:
     SpriteComponent(int w, int h, const std::vector<int>& sprite, int transparent) :
             Component(ComponentType::Sprite), width(w), height(h),
-            sprite_chars(sprite), transparent_char(transparent) {};
+            sprite_chars(sprite), transparent_char(transparent), attr(0) {};
     SpriteComponent(int c) :
             Component(ComponentType::Sprite), width(1), height(1),
-            sprite_chars(1, c), transparent_char(0x00) {};
+            sprite_chars(1, c), transparent_char(0x00), attr(0) {};
     SpriteComponent(std::string filename);
     int width;
     int height;
     std::vector<int> sprite_chars;
     int transparent_char;
+    int attr;
 };
 
 class KeyboardControlledMovementComponent : public Component
@@ -82,6 +87,45 @@ public:
     std::unique_ptr<Swears::Widget> static_widget;
     std::unique_ptr<Swears::Widget> child;
 
+};
+
+class CellValueComponent : public Component
+{
+public:
+
+    CellValueComponent(void) : Component(ComponentType::CellValue), value(0) {};
+    CellValueComponent(int val) : Component(ComponentType::CellValue), value(val) {};
+
+    int value;
+};
+
+class CellTypeComponent : public Component
+{
+public:
+    enum class CellType
+    {
+        Starting,
+        Locked,
+        Free
+    };
+    CellTypeComponent(CellType t) : Component(ComponentType::CellType), cell_type(t) {};
+
+    CellType cell_type;
+};
+
+class StateComponent : public Component
+{
+public:
+    StateComponent(void) : Component(ComponentType::State), selected_row(0), selected_col(0) {};
+    int selected_col;
+    int selected_row;
+};
+
+class CellPosComponent : public Component
+{
+public:
+    CellPosComponent(int x, int y) : Component(ComponentType::CellPos), x(x), y(y) {};
+    int x, y;
 };
 
 #endif // _GAME_COMPONENTS_HPP_

@@ -87,10 +87,12 @@ public:
             }
         }
 
+        std::cout << to_draw.size() << std::endl;
         std::sort(to_draw.begin(), to_draw.end(),
                 [](std::pair<SpriteComponent*, PositionComponent*> a, std::pair<SpriteComponent*, PositionComponent*> b)
                 {
-                    return b.second->z >= a.second->z;
+                    //std::cout << b.second << " " << a.second << std::endl;
+                    return a.second->z < b.second->z;
                 }
         );
 
@@ -99,6 +101,10 @@ public:
         {
             auto& sprite = sprite_pair.first;
             auto& pos = sprite_pair.second;
+            if (sprite->attr)
+            {
+                curses->stdscr.AttrOn(sprite->attr);
+            }
 
             for (int y = 0; y < sprite->height and y + pos->y <= size.y; y++) {
                 for (int x = 0; x < sprite->width and x + pos->x <= size.x; x++) {
@@ -107,6 +113,10 @@ public:
                         curses->stdscr.Write(c & 0xff, {pos->x + x, pos->y + y});
                     }
                 }
+            }
+            if (sprite->attr)
+            {
+                curses->stdscr.AttrOff(sprite->attr);
             }
         }
         curses->refresh();
@@ -211,6 +221,112 @@ public:
     // 0 is the old accumulator, 1 is the new accumulator
     std::vector<std::bitset<128>> accumulators;
 
+
+};
+
+class SudokuLogicSystem : public System
+{
+public:
+    SudokuLogicSystem(EventDispatch* dispatch) :
+        System(dispatch), selected_row(0), selected_col(0), entered_value(0), entering_value(false)
+    {
+        EventDelegate delegate = std::bind(&SudokuLogicSystem::HandleInput, this, std::placeholders::_1);
+        dispatch->Register(EventType::Input, delegate);
+    };
+
+    void HandleInput(EventPtr& event)
+    {
+        auto input_event = std::dynamic_pointer_cast<InputEvent>(event);
+
+        if (input_event->key == KEY_ENTER or input_event->key == 0x0A or input_event->key == 0x0D )
+        {
+            entering_value = not entering_value;
+            return;
+        }
+
+        if (not entering_value)
+        {
+            if (input_event->key >= 'a' and input_event->key <= 'i') {
+                selected_row = input_event->key-'a';
+            } else if (input_event->key >= '1' and input_event->key <= '9') {
+                selected_col = input_event->key-'1';
+            } else if (input_event->key == KEY_RIGHT) {
+                selected_col = (selected_col+1) % 9;
+            } else if (input_event->key == KEY_LEFT) {
+                selected_col = (selected_col-1) % 9;
+            } else if (input_event->key == KEY_UP) {
+                selected_row = (selected_row-1) % 9;
+            } else if (input_event->key == KEY_DOWN) {
+                selected_row = (selected_row+1) % 9;
+            }
+
+        } else {
+            if (input_event->key >= '1' and input_event->key <= '9')
+            {
+                entered_value = input_event->key - '1';
+            }
+        }
+    }
+    virtual void update(std::vector<Entity> &entities, ms time_elapsed)
+    {
+        for (auto& entity : entities)
+        {
+            auto cell_type = dynamic_cast<CellTypeComponent*>(entity.GetComponent(ComponentType::CellType));
+            if (cell_type == nullptr)
+            {
+                continue;
+            }
+
+            auto cell_value = dynamic_cast<CellValueComponent*>(entity.GetComponent(ComponentType::CellValue));
+            if (cell_value == nullptr)
+            {
+                continue;
+            }
+
+            auto pos = dynamic_cast<CellPosComponent*>(entity.GetComponent(ComponentType::CellPos));
+            if (pos == nullptr)
+            {
+                continue;
+            }
+
+            auto sprite = dynamic_cast<SpriteComponent *>(entity.GetComponent(ComponentType::Sprite));
+            if (sprite == nullptr)
+            {
+                continue;
+            }
+
+            if (cell_type->cell_type == CellTypeComponent::CellType::Locked)
+            {
+                sprite->attr = A_BOLD;
+            } else if (cell_type->cell_type == CellTypeComponent::CellType::Free and pos->x == selected_col and pos->y == selected_row) {
+                sprite->attr = A_UNDERLINE | A_BOLD;
+            } else {
+                sprite->attr = 0;
+            }
+
+            if (pos->x == selected_col and pos->y == selected_row)
+            {
+                if (entering_value)
+                {
+                    cell_value->value = entered_value;
+                } else {
+                    entered_value = cell_value->value;
+                }
+            }
+
+            if (cell_value->value == 0)
+            {
+                sprite->sprite_chars[0] = '_';
+            } else {
+                sprite->sprite_chars[0] = '0'+cell_value->value;
+            }
+        }
+    }
+
+    int selected_row;
+    int selected_col;
+    bool entering_value;
+    int entered_value;
 
 };
 

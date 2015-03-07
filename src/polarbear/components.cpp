@@ -5,7 +5,7 @@
 #include <fstream>
 #include <stdexcept>
 
-SpriteComponent::SpriteComponent(std::string filename): Component(ComponentType::Sprite), transparent_char(0x20) // Spaces are transparent
+SpriteComponent::SpriteComponent(std::string filename): Component(ComponentType::Sprite), transparent_char(0x20), attr(0) // Spaces are transparent
 {
     // Read from file, assuming square
     std::ifstream file(filename);
