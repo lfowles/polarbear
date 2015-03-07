@@ -7,6 +7,8 @@
 #include <vector>
 #include <swears/widgets/widget.hpp>
 
+const int max_components = 32;
+
 class Component
 {
 public:

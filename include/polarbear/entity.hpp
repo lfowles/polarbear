@@ -72,7 +72,7 @@ public:
     std::vector<std::unique_ptr<Component>> components;
 
     // FIXME: Determine # of components at compile time? Probably not, depends on templates being instantiated. Just make sure not to exceed N!
-    std::bitset<32> component_mask;
+    std::bitset<max_components> component_mask;
 };
 
 #endif // _GAME_ENTITY_HPP_

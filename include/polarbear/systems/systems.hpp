@@ -23,8 +23,11 @@ class System
 public:
     System(EventDispatch* dispatch) : dispatch(dispatch) {};
     virtual ~System(void) {};
-    virtual void update(std::vector<Entity>& entities, ms time_elapsed) = 0;
+    virtual void update(ms time_elapsed) = 0;
     virtual void handle(EventPtr& event) {};
+    std::bitset<max_components> system_mask;
+    std::vector<std::shared_ptr<Entity>> interesting_entities;
+
 protected:
     EventDispatch* dispatch;
 };
@@ -36,6 +39,9 @@ public:
             System(dispatch), ms_per_render(1000.0/max_render_rate), accumulated_time(0.0),
             curses(CursesSingleton::GetCurses())
     {
+        system_mask.set(SpriteComponent::type);
+        system_mask.set(PositionComponent::type);
+
         // This should rather be set up at the beginning of the game
         curses->raw(true);
         curses->echo(false);
@@ -43,51 +49,31 @@ public:
         curses->Cursor(Swears::Curses::Visibility::Invisible);
     }
 
-    virtual void update(std::vector<Entity>& entities, ms time_elapsed)
+    virtual void update(ms time_elapsed)
     {
         accumulated_time += time_elapsed;
         if (accumulated_time > ms_per_render)
         {
-            render(entities, ms_per_render);
+            render(accumulated_time);
             accumulated_time = ms(0.0);// -= ms_per_render;
         }
     }
 
-    void render(std::vector<Entity>& entities, ms time_elapsed)
+    void render(ms time_elapsed)
     {
         curses->stdscr.Clear();
 
         // Draw gui in here? Loop over all widgets and call Draw I guess
 
         std::vector<std::pair<SpriteComponent*, PositionComponent*>> to_draw;
-        for (auto& entity : entities)
+        for (auto& entity : interesting_entities)
         {
-            auto pos = entity.Get<PositionComponent>();
-            if (pos == nullptr)
-            {
-                continue;
-            }
+            auto pos = entity->Get<PositionComponent>();
+            auto sprite = entity->Get<SpriteComponent>();
 
-            auto sprite = entity.Get<SpriteComponent>();
-            if (sprite != nullptr)
-            {
-                to_draw.push_back({sprite, pos});
-            }
-
-            auto widget = entity.Get<WidgetComponent>();
-            if (widget != nullptr)
-            {
-                auto size = entity.Get<SizeComponent>();
-                if (size != nullptr)
-                {
-                    auto size_vec = Swears::Vec2{size->x, size->y};
-                    auto origin = Swears::Vec2{pos->x, pos->y};
-                    widget->child->Draw(origin, size_vec, curses->stdscr);
-                }
-            }
+            to_draw.push_back({sprite, pos});
         }
 
-        std::cout << to_draw.size() << std::endl;
         std::sort(to_draw.begin(), to_draw.end(),
                 [](std::pair<SpriteComponent*, PositionComponent*> a, std::pair<SpriteComponent*, PositionComponent*> b)
                 {
@@ -134,7 +120,7 @@ public:
     CursesInputSystem(EventDispatch* dispatch, Swears::Window& window) :
             System(dispatch), input(window) {};
 
-    virtual void update(std::vector<Entity> &entities, ms time_elapsed)
+    virtual void update(ms time_elapsed)
     {
         while (input.has_input())
         {
@@ -156,6 +142,7 @@ public:
         EventDelegate delegate = std::bind(&KeyboardControllerSystem::HandleInput, this, std::placeholders::_1);
         dispatch->Register(EventType::Input, delegate);
         accumulators.resize(2);
+        system_mask.set(KeyboardControlledMovementComponent::type);
     };
 
     void HandleInput(EventPtr& event)
@@ -168,21 +155,12 @@ public:
         }
     }
 
-    virtual void update(std::vector<Entity> &entities, ms time_elapsed)
+    virtual void update(ms time_elapsed)
     {
-        for (auto& entity : entities)
+        for (auto& entity : interesting_entities)
         {
-            auto keyboard_movement = entity.Get<KeyboardControlledMovementComponent>();
-            if (keyboard_movement == nullptr)
-            {
-                continue;
-            }
-
-            auto pos = entity.Get<PositionComponent>();
-            if (pos == nullptr)
-            {
-                continue;
-            }
+            auto keyboard_movement = entity->Get<KeyboardControlledMovementComponent>();
+            auto pos = entity->Get<PositionComponent>();
 
             // This should really generate movement events that get immediately dispatched using SendEvent!
             // This way AI and players can have MovableComponents that receive Move events
@@ -232,6 +210,11 @@ public:
     {
         EventDelegate delegate = std::bind(&SudokuLogicSystem::HandleInput, this, std::placeholders::_1);
         dispatch->Register(EventType::Input, delegate);
+
+        system_mask.set(CellPosComponent::type);
+        system_mask.set(CellTypeComponent::type);
+        system_mask.set(CellValueComponent::type);
+        system_mask.set(SpriteComponent::type);
     };
 
     void HandleInput(EventPtr& event)
@@ -267,33 +250,14 @@ public:
             }
         }
     }
-    virtual void update(std::vector<Entity> &entities, ms time_elapsed)
+    virtual void update(ms time_elapsed)
     {
-        for (auto& entity : entities)
+        for (auto& entity : interesting_entities)
         {
-            auto cell_type = entity.Get<CellTypeComponent>();
-            if (cell_type == nullptr)
-            {
-                continue;
-            }
-
-            auto cell_value = entity.Get<CellValueComponent>();
-            if (cell_value == nullptr)
-            {
-                continue;
-            }
-
-            auto pos = entity.Get<CellPosComponent>();
-            if (pos == nullptr)
-            {
-                continue;
-            }
-
-            auto sprite = entity.Get<SpriteComponent>();
-            if (sprite == nullptr)
-            {
-                continue;
-            }
+            auto cell_type = entity->Get<CellTypeComponent>();
+            auto cell_value = entity->Get<CellValueComponent>();
+            auto pos = entity->Get<CellPosComponent>();
+            auto sprite = entity->Get<SpriteComponent>();
 
             if (cell_type->cell_type == CellTypeComponent::CellType::Locked)
             {

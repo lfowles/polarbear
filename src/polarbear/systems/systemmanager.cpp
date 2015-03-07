@@ -17,7 +17,16 @@ void SystemManager::AddSystem(System*&& system)
 
 void SystemManager::AddEntity(Entity& entity)
 {
-    entities.push_back(std::move(entity));
+    // This is good enough for now, with a mostly static list of entities and components, but in the future this will need some sort of hook on AddComponent/RemoveComponent
+    entities.push_back(std::make_shared<Entity>(std::move(entity)));
+
+    for (auto &system : systems)
+    {
+        if (system->system_mask.any() and (entities.back()->component_mask & system->system_mask) == system->system_mask)
+        {
+            system->interesting_entities.push_back(entities.back());
+        }
+    }
 };
 
 void SystemManager::update(ms time_elapsed)
@@ -27,7 +36,7 @@ void SystemManager::update(ms time_elapsed)
     {
         for (auto &system : systems)
         {
-            system->update(entities, ms_per_update);
+            system->update(ms_per_update);
             accumulated_time -= ms_per_update;
         }
     }

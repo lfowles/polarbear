@@ -15,6 +15,9 @@ public:
 
     virtual void Init(void)
     {
+        auto logic_system = new SudokuLogicSystem(dispatch);
+        systems.AddSystem(logic_system);
+
         auto curses = CursesSingleton::GetCurses();
         systems.SetMaxUpdateRate(UPDATE_HZ);
         auto rendering_system = new CursesRenderSystem(dispatch, RENDER_HZ);
@@ -27,8 +30,7 @@ public:
         //auto keyboard_system = new KeyboardControllerSystem(dispatch);
         //systems.AddSystem(keyboard_system);
 
-        auto logic_system = new SudokuLogicSystem(dispatch);
-        systems.AddSystem(logic_system);
+
 
 //        Entity a, b, c, widget;
         {

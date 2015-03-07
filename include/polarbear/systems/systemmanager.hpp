@@ -20,7 +20,7 @@ public:
     void SetMaxUpdateRate(double max_update_rate);
 private:
     std::vector<std::shared_ptr<System>> systems;
-    std::vector<Entity> entities;
+    std::vector<std::shared_ptr<Entity>> entities;
     ms ms_per_update;
     ms accumulated_time;
 };
