@@ -17,7 +17,7 @@ public:
     void AddSystem(System*&& system);
     void AddEntity(Entity& entity);
     void update(ms time_elapsed);
-    void SetMaxUpdateRate(double max_update_rate);
+    void SetUpdateTime(s update_time);
 private:
     std::vector<std::shared_ptr<System>> systems;
     std::vector<std::shared_ptr<Entity>> entities;

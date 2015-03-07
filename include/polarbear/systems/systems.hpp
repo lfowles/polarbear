@@ -27,7 +27,6 @@ public:
     virtual void handle(EventPtr& event) {};
     std::bitset<max_components> system_mask;
     std::vector<std::shared_ptr<Entity>> interesting_entities;
-
 protected:
     EventDispatch* dispatch;
 };
@@ -35,8 +34,8 @@ protected:
 class CursesRenderSystem : public System
 {
 public:
-    CursesRenderSystem(EventDispatch* dispatch, double max_render_rate) :
-            System(dispatch), ms_per_render(1000.0/max_render_rate), accumulated_time(0.0),
+    CursesRenderSystem(EventDispatch* dispatch, s render_time) :
+            System(dispatch), ms_per_render(render_time), accumulated_time(0.0),
             curses(CursesSingleton::GetCurses())
     {
         system_mask.set(SpriteComponent::type);

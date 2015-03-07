@@ -19,8 +19,8 @@ public:
         systems.AddSystem(logic_system);
 
         auto curses = CursesSingleton::GetCurses();
-        systems.SetMaxUpdateRate(UPDATE_HZ);
-        auto rendering_system = new CursesRenderSystem(dispatch, RENDER_HZ);
+        systems.SetUpdateTime(update_duration);
+        auto rendering_system = new CursesRenderSystem(dispatch, render_duration);
 
         systems.AddSystem(rendering_system);
 

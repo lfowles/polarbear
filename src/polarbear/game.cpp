@@ -25,7 +25,7 @@ void SuspendedMagic::Run(void)
     using time = clock::time_point;
     using std::chrono::duration_cast;
 
-    constexpr ms ms_per_loop = ms(1000.0/MAXIMUM_HZ);
+    constexpr ms ms_per_loop = ms(min_loop_duration);
 
     running = true;
     time previous = clock::now();
@@ -39,6 +39,8 @@ void SuspendedMagic::Run(void)
         scenemanager.Update(elapsed);
 
         dispatch.DispatchAll();
+
+        //avg = ((count - 1) * avg + ms(clock::now() - current)) / count;
 
         ms sleep_time = ms_per_loop - duration_cast<ms>(clock::now() - current);
         if (sleep_time.count() > 0)

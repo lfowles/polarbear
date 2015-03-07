@@ -42,7 +42,7 @@ void SystemManager::update(ms time_elapsed)
     }
 };
 
-void SystemManager::SetMaxUpdateRate(double max_update_rate)
+void SystemManager::SetUpdateTime(s update_time)
 {
-    ms_per_update = ms(1.0/max_update_rate);
+    ms_per_update = ms(update_time);
 };
