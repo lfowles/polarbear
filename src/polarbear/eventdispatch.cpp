@@ -1,4 +1,4 @@
-#include <polarbear/event.hpp>
+#include <polarbear/events/event.hpp>
 #include <polarbear/systems/systems.hpp>
 
 void EventDispatch::DispatchAll(void)

@@ -1,11 +1,17 @@
-#include <polarbear/components.hpp>
+#include <polarbear/components/components.hpp>
 
 #include <algorithm>
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
 
-template <typename T> const unsigned int BaseComponent<T>::type(nextType++);
+// Ok, BaseComponent<T>::type stays in the header because it's a static member of a template class.
+// nextType is declared extern in the header and initialized here, to avoid one of:
+// * "multiple definition" errors in the linker.
+// * duplicate types (ex: Sprite type = 2 and CellValue type = 2)
+
+unsigned int nextType = 0;
+//template <typename T> const unsigned int BaseComponent<T>::type(nextType++);
 
 SpriteComponent::SpriteComponent(std::string filename): transparent_char(0x20), attr(0) // Spaces are transparent
 {

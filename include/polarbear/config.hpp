@@ -1,5 +1,5 @@
-#ifndef _GAME_CONFIG_HPP_
-#define _GAME_CONFIG_HPP_
+#ifndef _POLARBEAR_CONFIG_HPP_
+#define _POLARBEAR_CONFIG_HPP_
 
 #include "helpers.hpp"
 
@@ -12,4 +12,4 @@ constexpr s update_duration(1.0/UPDATE_HZ);
 constexpr s render_duration(1.0/RENDER_HZ);
 constexpr s min_loop_duration(1.0/MAXIMUM_HZ);
 
-#endif // _GAME_CONFIG_HPP_
+#endif // _POLARBEAR_CONFIG_HPP_

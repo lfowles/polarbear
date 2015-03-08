@@ -1,5 +1,5 @@
-#ifndef _GAME_SYSTEMMANAGER_HPP_
-#define _GAME_SYSTEMMANAGER_HPP_
+#ifndef _POLARBEAR_SYSTEMS_SYSTEMMANAGER_HPP_
+#define _POLARBEAR_SYSTEMS_SYSTEMMANAGER_HPP_
 
 #include <memory>
 #include <vector>
@@ -26,4 +26,4 @@ private:
 };
 
 
-#endif // _GAME_SYSTEMMANAGER_HPP_
+#endif // _POLARBEAR_SYSTEMS_SYSTEMMANAGER_HPP_

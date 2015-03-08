@@ -8,7 +8,7 @@
 
 #include <polarbear/config.hpp>
 #include <polarbear/helpers.hpp>
-#include <polarbear/mainmenuscene.hpp>
+#include <polarbear/scenes/mainmenu.hpp>
 void SuspendedMagic::Init(void)
 {
     EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);

@@ -1,12 +1,12 @@
-#ifndef _GAME_ENTITY_HPP_
-#define _GAME_ENTITY_HPP_
-
-#include "components.hpp"
+#ifndef _POLARBEAR_ENTITY_HPP_
+#define _POLARBEAR_ENTITY_HPP_
 
 #include <algorithm>
 #include <bitset>
 #include <memory>
 #include <vector>
+
+#include "components/components.hpp"
 
 class Entity
 {
@@ -75,4 +75,4 @@ public:
     std::bitset<max_components> component_mask;
 };
 
-#endif // _GAME_ENTITY_HPP_
+#endif // _POLARBEAR_ENTITY_HPP_

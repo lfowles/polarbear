@@ -1,14 +1,14 @@
-#ifndef _GAME_GAME_HPP_
-#define _GAME_GAME_HPP_
+#ifndef _POLARBEAR_GAME_HPP_
+#define _POLARBEAR_GAME_HPP_
 
 
 #include <queue>
 
 #include "entity.hpp"
-#include "event.hpp"
+#include "events/event.hpp"
 #include "systems/systemmanager.hpp"
 #include "systems/systems.hpp"
-#include "scene.hpp"
+#include "scenes/scenemanager.hpp"
 
 class SuspendedMagic
 {
@@ -23,4 +23,4 @@ private:
     SceneManager scenemanager;
 };
 
-#endif // _GAME_GAME_HPP_
+#endif // _POLARBEAR_GAME_HPP_

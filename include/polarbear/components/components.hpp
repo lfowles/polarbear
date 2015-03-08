@@ -1,10 +1,11 @@
-#ifndef _GAME_COMPONENTS_HPP_
-#define _GAME_COMPONENTS_HPP_
+#ifndef _POLARBEAR_COMPONENTS_COMPONENTS_HPP_
+#define _POLARBEAR_COMPONENTS_COMPONENTS_HPP_
 
 // instead of a scene graph, have components like "AttachedTo(parent)", etc
 
 #include <string>
 #include <vector>
+
 #include <swears/widgets/widget.hpp>
 
 const int max_components = 32;
@@ -14,18 +15,21 @@ class Component
 public:
     virtual unsigned int Type(void) const = 0;
     virtual ~Component() = default;
-
 };
 
 // http://www.reddit.com/r/learnprogramming/comments/1jzlon/cwhy_exactly_is_rtti_and_typeid_bad/cbkz2mc
-static unsigned int nextType = 0;
+extern unsigned int nextType;
+
 template <typename T>
 class BaseComponent : public Component
 {
 public:
     virtual unsigned int Type(void) const override {return type;};
+
     static const unsigned int type;
 };
+
+template <typename T> const unsigned int BaseComponent<T>::type(nextType++);
 
 class PositionComponent : public BaseComponent<PositionComponent>
 {
@@ -82,43 +86,4 @@ public:
 
 };
 
-class CellValueComponent : public BaseComponent<CellValueComponent>
-{
-public:
-
-    CellValueComponent(void) : value(0) {};
-    CellValueComponent(int val) : value(val) {};
-
-    int value;
-};
-
-class CellTypeComponent : public BaseComponent<CellTypeComponent>
-{
-public:
-    enum class CellType
-    {
-        Starting,
-        Locked,
-        Free
-    };
-    CellTypeComponent(CellType t) : cell_type(t) {};
-
-    CellType cell_type;
-};
-
-class StateComponent : public BaseComponent<StateComponent>
-{
-public:
-    StateComponent(void) : selected_row(0), selected_col(0) {};
-    int selected_col;
-    int selected_row;
-};
-
-class CellPosComponent : public BaseComponent<CellPosComponent>
-{
-public:
-    CellPosComponent(int x, int y) : x(x), y(y) {};
-    int x, y;
-};
-
-#endif // _GAME_COMPONENTS_HPP_
+#endif // _POLARBEAR_COMPONENTS_COMPONENTS_HPP_
