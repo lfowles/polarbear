@@ -48,6 +48,17 @@ void MainMenuScene::Init(void)
         systems.AddEntity(state);
     }
 
+    std::array<int, 81> values = {
+            2,9,5,7,4,3,8,6,1,
+            4,3,1,8,7,6,9,2,7,
+            8,7,6,1,2,9,5,4,3,
+            3,8,7,4,5,9,2,1,6,
+            6,1,2,3,8,7,4,9,5,
+            5,4,9,2,1,6,7,3,8,
+            7,6,3,5,3,4,1,8,9,
+            9,2,8,6,7,1,3,5,4,
+            1,5,4,9,3,8,6,7,2};
+
     for (int r = 0; r < 9; r++)
     {
         auto y = r * 2 + 2;
@@ -60,9 +71,9 @@ void MainMenuScene::Init(void)
             cell.AddComponent(pos);
             auto grid_pos = std::unique_ptr<CellPosComponent>(new CellPosComponent(c, r));
             cell.AddComponent(grid_pos);
-            auto cell_value = std::unique_ptr<CellValueComponent>(new CellValueComponent(c));
+            auto cell_value = std::unique_ptr<CellValueComponent>(new CellValueComponent(values[r*9+c]));
             cell.AddComponent(cell_value);
-            auto sprite = std::unique_ptr<SpriteComponent>(new SpriteComponent(0x30 + c));
+            auto sprite = std::unique_ptr<SpriteComponent>(new SpriteComponent(0x30 + values[r*9+c]));
             cell.AddComponent(sprite);
             auto cell_type = std::unique_ptr<CellTypeComponent>(new CellTypeComponent(CellTypeComponent::CellType::Free));
             cell.AddComponent(cell_type);
