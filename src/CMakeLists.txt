@@ -1,16 +1,29 @@
-add_subdirectory(polarbear)
+project(polarbear)
 
-project(cursestest)
+set(SOURCE_FILES game.cpp
+                 render.cpp
+                 eventdispatch.cpp
+                 cursessingleton.cpp
+                 components/components.cpp
+                 scenes/scenemanager.cpp
+                 systems/systemmanager.cpp
+                 systems/cursesinput.cpp
+                 systems/cursesrender.cpp
+                 systems/keyboardcontroller.cpp)
 
-set(SOURCE_FILES main.cpp)
-add_executable(cursestest ${SOURCE_FILES})
-target_link_libraries(cursestest polarbear)
-target_include_directories(cursestest PRIVATE ../include)
+add_library(polarbear SHARED ${SOURCE_FILES})
+target_link_libraries(polarbear swears)
+target_include_directories(polarbear PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>
+    $<INSTALL_INTERFACE:include/>)
 
-install(TARGETS cursestest EXPORT cursestest
-        RUNTIME DESTINATION bin
+# TODO: resource loader that can be queried.
+# This is so that resource paths can be set at any level of the project and multiple resource paths loaded.
+target_compile_definitions(polarbear PUBLIC "-DRESOURCE_PATH=\"${CMAKE_SOURCE_DIR}/resources/\"")
+
+install(TARGETS polarbear EXPORT polarbear
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         INCLUDES DESTINATION include)
 
-install(EXPORT cursestest DESTINATION share/cursestest/cmake)
+install(EXPORT polarbear DESTINATION share/polarbear/cmake)

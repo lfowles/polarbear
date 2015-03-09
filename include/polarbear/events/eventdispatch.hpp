@@ -24,7 +24,6 @@ public:
 private:
     EventQueue queue;
     std::map<EventType, std::vector<EventDelegate>> dispatch;
-//    std::map<EventType, std::vector<System*>> dispatch;
 };
 
 #endif // _POLARBEAR_EVENTS_EVENTDISPATCH_HPP_

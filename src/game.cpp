@@ -8,17 +8,14 @@
 
 #include <polarbear/config.hpp>
 #include <polarbear/helpers.hpp>
-#include <polarbear/scenes/mainmenu.hpp>
-void SuspendedMagic::Init(void)
-{
-    EventDelegate delegate = std::bind(&SuspendedMagic::handle_quit, this, std::placeholders::_1);
-    dispatch.Register(EventType::Input, delegate);
 
-    //MainMenuScene scene(dispatch);
-    scenemanager.PushScene(std::make_shared<MainMenuScene>(dispatch));
+Polarbear::Polarbear(void)
+{
+    EventDelegate delegate = std::bind(&Polarbear::handle_quit, this, std::placeholders::_1);
+    dispatch.Register(EventType::Input, delegate);
 }
 
-void SuspendedMagic::Run(void)
+void Polarbear::Run(void)
 {
     using ms = std::chrono::duration<double, std::milli>;
     using clock = std::chrono::steady_clock;
@@ -55,7 +52,7 @@ void SuspendedMagic::Run(void)
     }
 }
 
-void SuspendedMagic::handle_quit(EventPtr &event)
+void Polarbear::handle_quit(EventPtr &event)
 {
     auto input_event = std::dynamic_pointer_cast<InputEvent>(event);
     if (input_event->key == 'q')
