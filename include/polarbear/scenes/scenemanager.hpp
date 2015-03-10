@@ -1,6 +1,8 @@
 #ifndef _POLARBEAR_SCENES_SCENEMANAGER_HPP_
 #define _POLARBEAR_SCENES_SCENEMANAGER_HPP_
 
+#include <vector>
+
 #include "scene.hpp"
 
 class SceneManager

@@ -17,9 +17,9 @@ public:
     void Unregister(EventType type, System& system);
     void Unregister(EventType type, EventDelegate& delegate);
 
-    void QueueEvent(EventPtr& event) {queue.SendEvent(event); };
+    void QueueEvent(EventPtr event) { queue.SendEvent(event); };
 
-    void SendEvent(EventPtr& event);
+    void SendEvent(EventPtr event);
 
 private:
     EventQueue queue;

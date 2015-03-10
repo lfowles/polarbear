@@ -13,6 +13,9 @@ Polarbear::Polarbear(void)
 {
     EventDelegate delegate = std::bind(&Polarbear::handle_quit, this, std::placeholders::_1);
     dispatch.Register(EventType::Input, delegate);
+
+    EventDelegate scenechange_delegate = std::bind(&Polarbear::handle_scenechange, this, std::placeholders::_1);
+    dispatch.Register(EventType::SceneChange, scenechange_delegate);
 }
 
 void Polarbear::Run(void)
@@ -37,6 +40,11 @@ void Polarbear::Run(void)
 
         dispatch.DispatchAll();
 
+        if (not scene_changes.empty())
+        {
+            do_scenechange();
+        }
+
         //avg = ((count - 1) * avg + ms(clock::now() - current)) / count;
 
         ms sleep_time = ms_per_loop - duration_cast<ms>(clock::now() - current);
@@ -50,6 +58,35 @@ void Polarbear::Run(void)
 //            select(STDIN_FILENO+1, &readfds, nullptr, nullptr, &block_for);
         }
     }
+}
+
+void Polarbear::handle_scenechange(EventPtr &event)
+{
+    std::cout << "def" << std::endl;
+
+    scene_changes.push_back(event);
+}
+
+void Polarbear::do_scenechange(void)
+{
+    for (auto &event : scene_changes)
+    {
+        auto input_event = std::dynamic_pointer_cast<SceneChangeEvent>(event);
+        std::cout << input_event << std::endl;
+        switch (input_event->op)
+        {
+            case SceneChangeEvent::Operation::Pop:
+                scenemanager.PopScene();
+                break;
+            case SceneChangeEvent::Operation::Push:
+                scenemanager.PushScene(input_event->scene);
+                break;
+            case SceneChangeEvent::Operation::Replace:
+                scenemanager.SetScene(input_event->scene);
+                break;
+        }
+    }
+    scene_changes.clear();
 }
 
 void Polarbear::handle_quit(EventPtr &event)

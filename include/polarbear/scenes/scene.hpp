@@ -2,7 +2,6 @@
 #define _POLARBEAR_SCENES_SCENE_HPP_
 
 #include <memory>
-#include <vector>
 
 #include "../helpers.hpp"
 

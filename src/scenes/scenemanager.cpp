@@ -2,7 +2,8 @@
 
 void SceneManager::SetScene(ScenePtr scene)
 {
-    if (stack.size() > 0) {
+    if (not stack.empty())
+    {
         stack.back()->Destroy();
         stack.pop_back();
     }
@@ -12,7 +13,7 @@ void SceneManager::SetScene(ScenePtr scene)
 
 void SceneManager::PushScene(ScenePtr scene)
 {
-    if (stack.size() > 0)
+    if (not stack.empty())
     {
         stack.back()->Pause();
     }
@@ -24,7 +25,7 @@ void SceneManager::PopScene(void)
 {
     stack.back()->Destroy();
     stack.pop_back();
-    if (stack.size() > 0)
+    if (not stack.empty())
     {
         stack.back()->Resume();
     }
@@ -32,8 +33,9 @@ void SceneManager::PopScene(void)
 
 void SceneManager::Update(ms elapsed)
 {
-    if (stack.size() > 0)
+    // All states in the stack will update, it's up to the states to make sure that when they transition they set their systems to something reasonable
+    for (auto& scene : stack)
     {
-        stack.back()->Update(elapsed);
+        scene->Update(elapsed);
     }
 }

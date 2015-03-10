@@ -13,6 +13,7 @@ enum class EventType
 {
     None,
     Input,
+    SceneChange,
     EndGame
 };
 
@@ -29,6 +30,24 @@ class InputEvent : public Event
 public:
     InputEvent(int key) : Event(EventType::Input), key(key) {};
     int key;
+};
+
+class Scene;
+using ScenePtr = std::shared_ptr<Scene>;
+class SceneChangeEvent : public Event
+{
+public:
+    enum class Operation
+    {
+        Push,
+        Pop,
+        Replace
+    };
+    SceneChangeEvent(Operation op, ScenePtr scene) :
+            Event(EventType::SceneChange), op(op), scene(scene) {};
+
+    Operation op;
+    ScenePtr scene;
 };
 
 using EventPtr = std::shared_ptr<Event>;

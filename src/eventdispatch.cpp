@@ -44,7 +44,7 @@ void EventDispatch::Unregister(EventType type, EventDelegate &delegate)
     }
 }
 
-void EventDispatch::SendEvent(EventPtr& event)
+void EventDispatch::SendEvent(EventPtr event)
 {
     auto delegates = dispatch[event->type];
     for (auto& delegate : delegates)
