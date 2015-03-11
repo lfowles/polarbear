@@ -12,10 +12,20 @@
 Polarbear::Polarbear(void)
 {
     EventDelegate delegate = std::bind(&Polarbear::handle_quit, this, std::placeholders::_1);
-    dispatch.Register(EventType::Input, delegate);
+    auto hash = EventDelegateHash
+            (
+                    reinterpret_cast<char*>(&Polarbear::handle_quit),
+                    reinterpret_cast<uintptr_t>(this)
+            );
+    dispatch.Register(EventType::Input, delegate, hash);
 
     EventDelegate scenechange_delegate = std::bind(&Polarbear::handle_scenechange, this, std::placeholders::_1);
-    dispatch.Register(EventType::SceneChange, scenechange_delegate);
+    auto scenechange_hash = EventDelegateHash
+            (
+                    reinterpret_cast<char*>(&Polarbear::handle_scenechange),
+                    reinterpret_cast<uintptr_t>(this)
+            );
+    dispatch.Register(EventType::SceneChange, scenechange_delegate, scenechange_hash);
 }
 
 void Polarbear::Run(void)

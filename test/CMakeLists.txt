@@ -64,6 +64,6 @@ include_directories("${source_dir}/include")
 # And now, the rest of the story
 
 set(SOURCE_FILES main.cpp)
-add_executable(test1_exe ${SOURCE_FILES})
-target_link_libraries(test1_exe libgtest libgtest_main)
-add_test(NAME test1 COMMAND test1_exe)
+add_executable(polarbear_test ${SOURCE_FILES})
+target_link_libraries(polarbear_test libgtest libgtest_main polarbear)
+add_test(NAME polarbear_test COMMAND polarbear_test)

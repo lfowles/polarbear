@@ -15,29 +15,49 @@ void EventDispatch::DispatchAll(void)
 void EventDispatch::Register(EventType type, System &system)
 {
     EventDelegate delegate = std::bind(&System::handle, &system, std::placeholders::_1);
-    Register(type, delegate);
+    auto hash = GetHash(system, &System::handle);
+    Register(type, delegate, hash);
 }
 
-void EventDispatch::Register(EventType type, EventDelegate &delegate)
+EventDelegateHash EventDispatch::Register(EventType type, System &system, std::function<void(System*, EventPtr &)> method)
+{
+    auto hash = GetHash(system, method);
+    EventDelegate delegate = std::bind(method.target(), &system, std::placeholders::_1);
+    Register(type, delegate, hash);
+    return hash;
+}
+
+void EventDispatch::Register(EventType type, EventDelegate &delegate, EventDelegateHash &hash)
 {
     dispatch[type].push_back(delegate);
+    delegate_locator[type].push_back(hash);
 }
 
 void EventDispatch::Unregister(EventType type, System &system)
 {
     EventDelegate delegate = std::bind(&System::handle, &system, std::placeholders::_1);
-    Unregister(type, delegate);
+    auto hash = GetHash(system, &System::handle);
+    Unregister(type, hash);
 }
 
-void EventDispatch::Unregister(EventType type, EventDelegate &delegate)
+void EventDispatch::Unregister(EventType type, System &system, std::function<void(System*, EventPtr &)> method)
 {
-    auto delegates = dispatch[type];
+    auto hash = GetHash(system, method);
+    Unregister(type, hash);
+}
+
+#include <iostream>
+void EventDispatch::Unregister(EventType type, EventDelegateHash &hash)
+{
+    auto& hashes = delegate_locator[type];
+    auto& delegates = dispatch[type];
     auto index = 0;
-    for (auto stored_delegate : delegates)
+    for (auto& stored_hash : hashes)
     {
-        if (delegate.target<void(EventPtr&)>() == stored_delegate.target<void(EventPtr&)>())
+        if (hash == stored_hash)
         {
             delegates.erase(delegates.begin()+index);
+            hashes.erase(hashes.begin()+index);
             break;
         }
         index++;
@@ -46,9 +66,25 @@ void EventDispatch::Unregister(EventType type, EventDelegate &delegate)
 
 void EventDispatch::SendEvent(EventPtr event)
 {
-    auto delegates = dispatch[event->type];
+    auto& delegates = dispatch[event->type];
     for (auto& delegate : delegates)
     {
         delegate(event);
     }
+}
+
+EventDelegateHash EventDispatch::GetHash(System &system, std::function<void(System*, EventPtr&)> function)
+{
+    return EventDelegateHash{
+            reinterpret_cast<EventDelegateHash::first_type>(function.target()),
+            reinterpret_cast<EventDelegateHash::second_type>(&system),
+    };
+}
+
+EventDelegateHash EventDispatch::GetHash(std::function<void(System*, EventPtr&)> function)
+{
+    return EventDelegateHash{
+            reinterpret_cast<EventDelegateHash::first_type>(function.target()),
+            EventDelegateHash::second_type{0}
+    };
 }

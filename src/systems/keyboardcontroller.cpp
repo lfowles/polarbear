@@ -3,8 +3,7 @@
 KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch) :
         System(dispatch)
 {
-    EventDelegate delegate = std::bind(&KeyboardControllerSystem::HandleInput, this, std::placeholders::_1);
-    dispatch->Register(EventType::Input, delegate);
+    dispatch->Register(EventType::Input, *this, &KeyboardControllerSystem::HandleInput);
     accumulators.resize(2);
     system_mask.set(KeyboardControlledMovementComponent::type);
 };
