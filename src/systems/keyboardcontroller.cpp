@@ -12,6 +12,10 @@ KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch) :
     system_mask.set(KeyboardControlledMovementComponent::type);
 };
 
+KeyboardControllerSystem::~KeyboardControllerSystem(void)
+{
+    dispatch->Unregister(EventType::Input, dispatch_id);
+}
 
 void KeyboardControllerSystem::HandleInput(EventPtr &event)
 {

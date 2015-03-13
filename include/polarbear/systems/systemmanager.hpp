@@ -6,12 +6,12 @@
 #include "systems.hpp"
 #include "../entity.hpp"
 #include "../helpers.hpp"
+#include "../config.hpp"
 
 class SystemManager
 {
 public:
-    SystemManager(void) = default;
-    SystemManager(double max_update_rate) : ms_per_update(1000.0/max_update_rate), accumulated_time(0.0) {};
+    SystemManager(void) : ms_per_update(update_duration), accumulated_time(0.0) {};
     void AddSystem(std::shared_ptr<System>& system);
     void AddSystem(std::shared_ptr<System>&& system);
     void AddSystem(System*&& system);

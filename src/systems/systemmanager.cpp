@@ -37,8 +37,8 @@ void SystemManager::update(ms time_elapsed)
         for (auto &system : systems)
         {
             system->update(ms_per_update);
-            accumulated_time -= ms_per_update;
         }
+        accumulated_time -= ms_per_update;
     }
 };
 
