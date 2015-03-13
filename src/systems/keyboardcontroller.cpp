@@ -1,9 +1,13 @@
 #include <polarbear/systems/keyboardcontroller.hpp>
 
+#include <functional>
+#include <memory>
+
 KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch) :
         System(dispatch)
 {
-    dispatch->Register(EventType::Input, *this, &KeyboardControllerSystem::HandleInput);
+    auto delegate = std::make_shared<EventDelegateMemberFunction<KeyboardControllerSystem>>(this, std::mem_fn(&KeyboardControllerSystem::HandleInput));
+    dispatch->Register(EventType::Input, delegate, dispatch_id);
     accumulators.resize(2);
     system_mask.set(KeyboardControlledMovementComponent::type);
 };

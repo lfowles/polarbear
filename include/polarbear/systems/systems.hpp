@@ -11,7 +11,11 @@
 class System
 {
 public:
-    System(EventDispatch* dispatch) : dispatch(dispatch) {};
+    System(EventDispatch* dispatch) : dispatch(dispatch)
+    {
+        IDDispenser dispenser{};
+        dispatch_id = dispenser.dispense();
+    };
     virtual ~System(void) {};
     virtual void update(ms time_elapsed) = 0;
     virtual void handle(EventPtr& event) {};
@@ -19,6 +23,7 @@ public:
     std::vector<std::shared_ptr<Entity>> interesting_entities;
 protected:
     EventDispatch* dispatch;
+    OriginID dispatch_id;
 };
 
 #endif // _POLARBEAR_SYSTEMS_SYSTEMS_HPP_

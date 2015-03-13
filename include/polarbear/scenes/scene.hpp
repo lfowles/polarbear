@@ -4,17 +4,24 @@
 #include <memory>
 
 #include "../helpers.hpp"
+#include "../events/eventdispatch.hpp"
 
 // Holds entitymanager, systemmanager, etc
 class Scene
 {
 public:
-    virtual ~Scene() {};
+    virtual ~Scene()
+    {
+        IDDispenser dispenser{};
+        dispatch_id = dispenser.dispense();
+    };
     virtual void Init(void) {};
     virtual void Pause(void) {};
     virtual void Resume(void) {};
     virtual void Update(ms elapsed) {};
     virtual void Destroy(void) {};
+protected:
+    OriginID dispatch_id;
 };
 
 using ScenePtr = std::shared_ptr<Scene>;

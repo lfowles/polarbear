@@ -23,6 +23,7 @@ private:
     void handle_quit(EventPtr& event);
     void handle_scenechange(EventPtr& event);
     std::vector<EventPtr> scene_changes;
+    OriginID dispatch_id;
 };
 
 #endif // _POLARBEAR_GAME_HPP_
