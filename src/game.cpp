@@ -12,6 +12,9 @@
 
 Polarbear::Polarbear(void)
 {
+    IDDispenser dispenser{};
+    dispatch_id = dispenser.dispense();
+
     auto quit_delegate = std::make_shared<EventDelegateMemberFunction<Polarbear>>(this, std::mem_fn(&Polarbear::handle_quit));
     dispatch.Register(EventType::Input, quit_delegate, dispatch_id);
 

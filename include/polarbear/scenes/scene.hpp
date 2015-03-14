@@ -10,11 +10,12 @@
 class Scene
 {
 public:
-    virtual ~Scene()
+    Scene(void)
     {
         IDDispenser dispenser{};
         dispatch_id = dispenser.dispense();
     };
+    virtual ~Scene(void) {};
     virtual void Init(void) {};
     virtual void Pause(void) {};
     virtual void Resume(void) {};
