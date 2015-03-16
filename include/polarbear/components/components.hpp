@@ -50,16 +50,12 @@ public:
 class SpriteComponent : public BaseComponent<SpriteComponent>
 {
 public:
-    SpriteComponent(int w, int h, const std::vector<int>& sprite, int transparent) :
-            width(w), height(h),
+    SpriteComponent(const std::string& sprite, int transparent) :
             sprite_chars(sprite), transparent_char(transparent), attr(0) {};
     SpriteComponent(int c) :
-            width(1), height(1),
             sprite_chars(1, c), transparent_char(0x00), attr(0) {};
     SpriteComponent(std::string filename);
-    int width;
-    int height;
-    std::vector<int> sprite_chars;
+    std::string sprite_chars;
     int transparent_char;
     int attr;
 };

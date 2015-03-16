@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <polarbear/events/eventdispatch.hpp>
-
+#include <polarbear/components/components.hpp>
 
 GTEST_TEST(EventDispatch, CallDelegate)
 {
@@ -48,4 +48,20 @@ GTEST_TEST(EventDispatch, Dispenser)
 {
     IDDispenser dispenser{};
     ASSERT_NE(dispenser.dispense(), dispenser.dispense());
+}
+
+GTEST_TEST(SpriteComponent, UTF8ReadFromFile)
+{
+    auto sprite = SpriteComponent(RESOURCE_PATH "intro/splash.sprite");
+    for (auto ch : sprite.sprite_chars)
+    {
+        if (ch == '\n')
+        {
+            std::cout << std::endl;
+        } else {
+            std::cout << ch;
+        }
+
+    }
+
 }

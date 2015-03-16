@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <thread>
-#include <iostream>
 #include <algorithm>
 
 #include <polarbear/config.hpp>
@@ -33,8 +32,8 @@ void Polarbear::Run(void)
 
     running = true;
     time previous = clock::now();
-    int count = 0;
-    ms avg(0.0f);
+    //int count = 0;
+    //ms avg(0.0f);
 
     while (running)
     {
@@ -51,9 +50,8 @@ void Polarbear::Run(void)
             do_scenechange();
         }
 
-        count++;
-
-        avg = ((count - 1) * avg + ms(clock::now() - current)) / count;
+        //count++;
+        //avg = ((count - 1) * avg + ms(clock::now() - current)) / count;
 
         ms sleep_time = ms_per_loop - duration_cast<ms>(clock::now() - current);
         if (sleep_time.count() > 0)
@@ -65,7 +63,6 @@ void Polarbear::Run(void)
 //            FD_SET(STDIN_FILENO, &readfds);
 //            select(STDIN_FILENO+1, &readfds, nullptr, nullptr, &block_for);
         }
-        std::cout << avg.count() << std::endl;
     }
 }
 
@@ -79,7 +76,6 @@ void Polarbear::do_scenechange(void)
     for (auto &event : scene_changes)
     {
         auto input_event = std::dynamic_pointer_cast<SceneChangeEvent>(event);
-        std::cout << input_event << std::endl;
         switch (input_event->op)
         {
             case SceneChangeEvent::Operation::Pop:

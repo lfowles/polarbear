@@ -1,5 +1,8 @@
 project(polarbear)
 
+find_package(Boost REQUIRED locale)
+include_directories(${BOOST_INCLUDE_DIRS})
+
 set(SOURCE_FILES game.cpp
                  render.cpp
                  eventdispatch.cpp
@@ -12,7 +15,7 @@ set(SOURCE_FILES game.cpp
                  systems/keyboardcontroller.cpp)
 
 add_library(polarbear SHARED ${SOURCE_FILES})
-target_link_libraries(polarbear swears)
+target_link_libraries(polarbear swears ${Boost_LIBRARIES})
 target_include_directories(polarbear PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include/>
     $<INSTALL_INTERFACE:include/>)

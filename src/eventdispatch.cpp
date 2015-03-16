@@ -18,7 +18,6 @@ void EventDispatch::Register(EventType type, std::shared_ptr<EventDelegate> dele
     delegate_locator[type].push_back(id);
 }
 
-#include <iostream>
 void EventDispatch::Unregister(EventType type, OriginID id)
 {
     auto& ids = delegate_locator[type];

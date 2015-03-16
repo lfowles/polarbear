@@ -21,17 +21,34 @@ SpriteComponent::SpriteComponent(std::string filename): transparent_char(0x20), 
     {
         std::string line;
         std::getline(file, line);
-        width = line.size();
+//        width = line.size();
+//        while (std::getline(file,line))
+//        {
+//            std::cout << line.size() << std::endl;
+//        }
         file.seekg(0);
 
         std::stringstream buffer;
         buffer << file.rdbuf();
-        auto data = std::string(buffer.str());
-        std::remove_if(data.begin(), data.end(), [](char x){return std::iscntrl(x);});
+        sprite_chars = std::string(buffer.str());
+        //auto a = std::codecvt<wchar_t, char, std::mbstate_t>;
 
-        sprite_chars = std::vector<int>(data.begin(), data.end());
+        //std::remove_if(data.begin(), data.end(), [](char x){return std::iscntrl(x);});
 
-        height = sprite_chars.size() / width;
+//        sprite_chars = std::vector<char>(data.begin(), data.end());
+
+//        std::cout << data << std::endl;
+//        auto counter = 0;
+//        for (auto i : data)
+//        {
+//            std::cout <<  i;
+//            if (counter%width == 0)
+//            {
+//                //std::cout << std::endl;
+//            }
+//            counter++;
+//        }
+//        height = sprite_chars.size() / width;
 
     } else {
         throw std::runtime_error("Sprite file not found.");
