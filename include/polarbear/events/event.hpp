@@ -9,32 +9,39 @@
 #include <vector>
 #include <stdexcept>
 
-enum class EventType
-{
-    None,
-    Input,
-    SceneChange,
-    EndGame
-};
+using EventType = unsigned int;
 
 class Event
 {
 public:
     virtual ~Event() {};
-    Event(EventType type): type(type) {};
-    EventType type;
+    virtual EventType Type(void) const = 0;
 };
 
-class InputEvent : public Event
+template <typename T>
+class BaseEvent : public Event
 {
 public:
-    InputEvent(int key) : Event(EventType::Input), key(key) {};
+    virtual EventType Type(void) const override { return type; };
+    static const EventType type;
+};
+
+extern EventType nextEventType;
+template <typename T> const unsigned int BaseEvent<T>::type(nextEventType++);
+
+class NopEvent : public BaseEvent<NopEvent> {};
+
+class InputEvent : public BaseEvent<InputEvent>
+{
+public:
+    InputEvent(int key) :
+            key(key) {};
     int key;
 };
 
 class Scene;
 using ScenePtr = std::shared_ptr<Scene>;
-class SceneChangeEvent : public Event
+class SceneChangeEvent : public BaseEvent<SceneChangeEvent>
 {
 public:
     enum class Operation
@@ -44,17 +51,13 @@ public:
         Replace
     };
     SceneChangeEvent(Operation op, ScenePtr scene) :
-            Event(EventType::SceneChange), op(op), scene(scene) {};
+            op(op), scene(scene) {};
 
     Operation op;
     ScenePtr scene;
 };
 
 using EventPtr = std::shared_ptr<Event>;
-
-
-//using EndGame = std::runtime_error;
-
 
 
 #endif //_POLARBEAR_EVENTS_EVENT_HPP_

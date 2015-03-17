@@ -5,6 +5,7 @@ include_directories(${BOOST_INCLUDE_DIRS})
 
 set(SOURCE_FILES game.cpp
                  render.cpp
+                 event.cpp
                  eventdispatch.cpp
                  cursessingleton.cpp
                  components/components.cpp

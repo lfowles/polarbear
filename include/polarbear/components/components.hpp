@@ -18,7 +18,6 @@ public:
 };
 
 // http://www.reddit.com/r/learnprogramming/comments/1jzlon/cwhy_exactly_is_rtti_and_typeid_bad/cbkz2mc
-extern unsigned int nextType;
 
 template <typename T>
 class BaseComponent : public Component
@@ -29,7 +28,8 @@ public:
     static const unsigned int type;
 };
 
-template <typename T> const unsigned int BaseComponent<T>::type(nextType++);
+extern unsigned int nextComponentType;
+template <typename T> const unsigned int BaseComponent<T>::type(nextComponentType++);
 
 class PositionComponent : public BaseComponent<PositionComponent>
 {

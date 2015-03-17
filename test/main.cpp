@@ -16,9 +16,9 @@ GTEST_TEST(EventDispatch, CallDelegate)
     IDDispenser dispenser{};
 
     EventDispatch dispatch{};
-    dispatch.Register(EventType::None, delegate, 0);
+    dispatch.Register<NopEvent>(delegate, 0);
 
-    auto event = std::make_shared<Event>(EventType::None);
+    auto event = std::make_shared<NopEvent>();
     dispatch.SendEvent(event);
 
     ASSERT_TRUE(pass);
@@ -35,14 +35,35 @@ GTEST_TEST(EventDispatch, RemoveDelegate)
     auto delegate = std::make_shared<EventDelegateFunction>(callback);
 
     EventDispatch dispatch{};
-    dispatch.Register(EventType::None, delegate, 0);
-    dispatch.Unregister(EventType::None, 0);
+    dispatch.Register<NopEvent>(delegate, 0);
+    dispatch.Unregister<NopEvent>(0);
 
-    auto event = std::make_shared<Event>(EventType::None);
+    auto event = std::make_shared<NopEvent>();
     dispatch.SendEvent(event);
 
     ASSERT_FALSE(pass);
 }
+
+GTEST_TEST(EventDispatch, RemoveAllDelegate)
+{
+    OriginID id = 0;
+    bool pass = false;
+    auto callback = [&pass](EventPtr& event)
+    {
+        pass = true;
+    };
+    auto delegate = std::make_shared<EventDelegateFunction>(callback);
+
+    EventDispatch dispatch{};
+    dispatch.Register<NopEvent>(delegate, 0);
+    dispatch.UnregisterAll(0);
+
+    auto event = std::make_shared<NopEvent>();
+    dispatch.SendEvent(event);
+
+    ASSERT_FALSE(pass);
+}
+
 
 GTEST_TEST(EventDispatch, Dispenser)
 {

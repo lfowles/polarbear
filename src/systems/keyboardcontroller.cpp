@@ -7,14 +7,14 @@ KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch) :
         System(dispatch)
 {
     auto delegate = std::make_shared<EventDelegateMemberFunction<KeyboardControllerSystem>>(this, std::mem_fn(&KeyboardControllerSystem::HandleInput));
-    dispatch->Register(EventType::Input, delegate, dispatch_id);
+    dispatch->Register<InputEvent>(delegate, dispatch_id);
     accumulators.resize(2);
     system_mask.set(KeyboardControlledMovementComponent::type);
 };
 
 KeyboardControllerSystem::~KeyboardControllerSystem(void)
 {
-    dispatch->Unregister(EventType::Input, dispatch_id);
+    dispatch->UnregisterAll(dispatch_id);
 }
 
 void KeyboardControllerSystem::HandleInput(EventPtr &event)

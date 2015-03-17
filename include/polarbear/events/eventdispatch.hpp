@@ -63,9 +63,24 @@ class EventDispatch
 public:
     void DispatchAll(void);
 
+    template <typename T>
+    void Register(std::shared_ptr<EventDelegate> delegate, OriginID id)
+    {
+        static_assert(std::is_base_of<Event, T>::value, "Type must be an Event");
+        Register(T::type, delegate, id);
+    }
     void Register(EventType type, std::shared_ptr<EventDelegate> delegate, OriginID id);
 
+    template <typename T>
+    void Unregister(OriginID id)
+    {
+        static_assert(std::is_base_of<Event, T>::value, "Type must be an Event");
+        Unregister(T::type, id);
+    }
+
     void Unregister(EventType type, OriginID id);
+
+    void UnregisterAll(OriginID id);
 
     void QueueEvent(EventPtr event) { queue.SendEvent(event); };
 

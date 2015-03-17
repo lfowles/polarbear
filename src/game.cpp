@@ -15,10 +15,10 @@ Polarbear::Polarbear(void)
     dispatch_id = dispenser.dispense();
 
     auto quit_delegate = std::make_shared<EventDelegateMemberFunction<Polarbear>>(this, std::mem_fn(&Polarbear::handle_quit));
-    dispatch.Register(EventType::Input, quit_delegate, dispatch_id);
+    dispatch.Register<InputEvent>(quit_delegate, dispatch_id);
 
     auto change_delegate = std::make_shared<EventDelegateMemberFunction<Polarbear>>(this, std::mem_fn(&Polarbear::handle_scenechange));
-    dispatch.Register(EventType::SceneChange, change_delegate, dispatch_id);
+    dispatch.Register<SceneChangeEvent>(change_delegate, dispatch_id);
 }
 
 void Polarbear::Run(void)

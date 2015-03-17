@@ -8,7 +8,7 @@ class EventQueue
 public:
     EventQueue(void) = default;
     void SendEvent(EventPtr& event) { queue.push(event); };
-    EventType Peek(void) { return queue.front()->type; };
+    EventType Peek(void) { return queue.front()->Type(); };
     EventPtr GetNextEvent(void)
     {
         auto event = queue.front();

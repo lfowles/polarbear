@@ -37,9 +37,18 @@ void EventDispatch::Unregister(EventType type, OriginID id)
 
 void EventDispatch::SendEvent(EventPtr event)
 {
-    auto& delegates = dispatch[event->type];
+    auto& delegates = dispatch[event->Type()];
     for (auto& delegate : delegates)
     {
         delegate->call(event);
+    }
+}
+
+void EventDispatch::UnregisterAll(OriginID id)
+{
+    for (auto& kv : dispatch)
+    {
+        auto& type = kv.first;
+        Unregister(type, id);
     }
 }
