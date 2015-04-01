@@ -6,7 +6,7 @@
 class KeyboardControllerSystem : public System
 {
 public:
-    KeyboardControllerSystem(EventDispatch* dispatch);
+    KeyboardControllerSystem(EventDispatch* dispatch, SystemManager* systems);
     ~KeyboardControllerSystem(void);
     void HandleInput(EventPtr& event);
     virtual void update(ms time_elapsed) override;

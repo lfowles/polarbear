@@ -46,3 +46,16 @@ void SystemManager::SetUpdateTime(s update_time)
 {
     ms_per_update = ms(update_time);
 };
+
+std::vector<std::shared_ptr<Entity>> SystemManager::GetEntities(std::bitset<max_components> mask)
+{
+    auto matching_entities = std::vector<std::shared_ptr<Entity>>{};
+    for (auto& entity : entities)
+    {
+        if ((mask & entity->component_mask) == mask)
+        {
+            matching_entities.push_back(entity);
+        }
+    }
+    return matching_entities;
+}

@@ -8,10 +8,11 @@
 #include "../events/eventdispatch.hpp"
 #include "../helpers.hpp"
 
+class SystemManager;
 class System
 {
 public:
-    System(EventDispatch* dispatch) : dispatch(dispatch)
+    System(EventDispatch* dispatch, SystemManager* systems) : dispatch(dispatch), systems(systems)
     {
         IDDispenser dispenser{};
         dispatch_id = dispenser.dispense();
@@ -23,7 +24,9 @@ public:
     std::vector<std::shared_ptr<Entity>> interesting_entities;
 protected:
     EventDispatch* dispatch;
+    SystemManager* systems;
     OriginID dispatch_id;
+
 };
 
 #endif // _POLARBEAR_SYSTEMS_SYSTEMS_HPP_

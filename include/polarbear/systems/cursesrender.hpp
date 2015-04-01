@@ -8,7 +8,7 @@
 class CursesRenderSystem : public System
 {
 public:
-    CursesRenderSystem(EventDispatch* dispatch, s render_time);
+    CursesRenderSystem(EventDispatch* dispatch, SystemManager* systems, s render_time);
     virtual void update(ms time_elapsed) override;
     void render(ms time_elapsed);
 

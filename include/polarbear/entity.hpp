@@ -19,6 +19,13 @@ public:
     }
 
     template <typename T>
+    void AddComponent(std::unique_ptr<T>&& component)
+    {
+        components.push_back(std::move(component));
+        component_mask.set(T::type);
+    }
+
+    template <typename T>
     void RemoveComponent(void)
     {
         auto component_iter = std::find_if(components.begin(), components.end(),
@@ -49,7 +56,7 @@ public:
         {
             AddComponent(component);
         } else {
-            components[component_iter] = component;
+            components[component_iter-components.begin()] = std::move(component);
         }
     }
 

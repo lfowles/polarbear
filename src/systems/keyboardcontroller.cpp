@@ -3,8 +3,8 @@
 #include <functional>
 #include <memory>
 
-KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch) :
-        System(dispatch)
+KeyboardControllerSystem::KeyboardControllerSystem(EventDispatch * dispatch, SystemManager *systems) :
+        System(dispatch, systems)
 {
     auto delegate = std::make_shared<EventDelegateMemberFunction<KeyboardControllerSystem>>(this, std::mem_fn(&KeyboardControllerSystem::HandleInput));
     dispatch->Register<InputEvent>(delegate, dispatch_id);

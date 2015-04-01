@@ -8,8 +8,8 @@
 class CursesInputSystem : public System
 {
 public:
-    CursesInputSystem(EventDispatch* dispatch, Swears::Window& window) :
-            System(dispatch), input(window) {};
+    CursesInputSystem(EventDispatch* dispatch, SystemManager* systems, Swears::Window& window) :
+            System(dispatch, systems), input(window) {};
 
     virtual void update(ms time_elapsed) override;
 

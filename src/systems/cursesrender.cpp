@@ -1,8 +1,8 @@
 #include <polarbear/systems/cursesrender.hpp>
 #include <boost/locale.hpp>
 
-CursesRenderSystem::CursesRenderSystem(EventDispatch *dispatch, s render_time) :
-        System(dispatch), ms_per_render(render_time), accumulated_time(0.0),
+CursesRenderSystem::CursesRenderSystem(EventDispatch *dispatch, SystemManager *systems, s render_time) :
+        System(dispatch, systems), ms_per_render(render_time), accumulated_time(0.0),
         curses(CursesSingleton::GetCurses())
 {
     system_mask.set(SpriteComponent::type);

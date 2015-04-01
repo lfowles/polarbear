@@ -18,9 +18,12 @@ public:
     void AddEntity(Entity& entity);
     void update(ms time_elapsed);
     void SetUpdateTime(s update_time);
+    std::vector<std::shared_ptr<Entity>> GetEntities(std::bitset<max_components> mask);
+
+    std::vector<std::shared_ptr<Entity>> entities;
+
 private:
     std::vector<std::shared_ptr<System>> systems;
-    std::vector<std::shared_ptr<Entity>> entities;
     ms ms_per_update;
     ms accumulated_time;
 };
