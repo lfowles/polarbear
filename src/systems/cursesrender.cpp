@@ -60,19 +60,37 @@ void CursesRenderSystem::render(ms time_elapsed)
         auto y = 0;
         // Following is unsupported as of gcc 4.9.1
 //        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-
-        std::wstring wide_string = boost::locale::conv::to_utf<wchar_t>(sprite->sprite_chars, "UTF-8");
-        curses->stdscr.Move(Swears::Vec2{pos->x, pos->y});
-
-        for (auto& c : wide_string)
+        if (Swears::WideChar)
         {
-            if (c == sprite->transparent_char) {
-                curses->stdscr.Move(curses->stdscr.CursorPosition()+Swears::Vec2{1,0});
-            } else if (c == '\n') {
-                y++;
-                curses->stdscr.Move({pos->x, pos->y+y});
-            } else {
-                curses->stdscr.WriteWide(c);
+            std::wstring wide_string = boost::locale::conv::to_utf<wchar_t>(sprite->sprite_chars, "UTF-8");
+            curses->stdscr.Move(Swears::Vec2{pos->x, pos->y});
+
+            for (auto &c : wide_string)
+            {
+                if (c == sprite->transparent_char)
+                {
+                    curses->stdscr.Move(curses->stdscr.CursorPosition() + Swears::Vec2{1, 0});
+                } else if (c == '\n') {
+                    y++;
+                    curses->stdscr.Move({pos->x, pos->y + y});
+                } else {
+                    curses->stdscr.WriteWide(c);
+                }
+            }
+        } else {
+            curses->stdscr.Move(Swears::Vec2{pos->x, pos->y});
+
+            for (auto &c : sprite->sprite_chars)
+            {
+                if (c == sprite->transparent_char)
+                {
+                    curses->stdscr.Move(curses->stdscr.CursorPosition() + Swears::Vec2{1, 0});
+                } else if (c == '\n') {
+                    y++;
+                    curses->stdscr.Move({pos->x, pos->y + y});
+                } else {
+                    curses->stdscr.Write(c);
+                }
             }
         }
 //        for (int y = 0; y < sprite->height and y + pos->y <= size.y; y++) {

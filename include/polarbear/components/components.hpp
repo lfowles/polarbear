@@ -60,6 +60,12 @@ public:
     int attr;
 };
 
+class PlayerInputComponent : public BaseComponent<PlayerInputComponent>
+{
+public:
+    PlayerInputComponent(const char input, bool ctrl, bool shift, bool alt);
+};
+
 class KeyboardControlledMovementComponent : public BaseComponent<KeyboardControlledMovementComponent>
 {
 public:
