@@ -11,6 +11,7 @@ set(SOURCE_FILES game.cpp
                  components/components.cpp
                  scenes/scenemanager.cpp
                  systems/systemmanager.cpp
+                 systems/systems.cpp
                  systems/cursesinput.cpp
                  systems/cursesrender.cpp
                  systems/keyboardcontroller.cpp)

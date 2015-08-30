@@ -20,6 +20,7 @@ public:
     virtual ~System(void) {};
     virtual void update(ms time_elapsed) = 0;
     virtual void handle(EventPtr& event) {};
+    virtual void entity_added(std::shared_ptr<Entity>& entity);
     std::bitset<max_components> system_mask;
     std::vector<std::shared_ptr<Entity>> interesting_entities;
 protected:

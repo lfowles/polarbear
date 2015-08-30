@@ -8,6 +8,8 @@
 
 #include <swears/widgets/widget.hpp>
 
+#include "../systems/input.hpp"
+
 const int max_components = 32;
 
 class Component
@@ -64,6 +66,20 @@ class PlayerInputComponent : public BaseComponent<PlayerInputComponent>
 {
 public:
     PlayerInputComponent(const char input, bool ctrl, bool shift, bool alt);
+};
+
+class KeyboardInputComponent : public BaseComponent<KeyboardInputComponent>
+{
+public:
+    bool has_input;
+    KeyInput input;
+};
+
+class MouseInputComponent : public BaseComponent<MouseInputComponent>
+{
+public:
+    bool has_input;
+    MouseInput input;
 };
 
 class KeyboardControlledMovementComponent : public BaseComponent<KeyboardControlledMovementComponent>

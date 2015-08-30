@@ -4,6 +4,32 @@
 void InputSystem::update(ms time_elapsed)
 {
     auto events = poller->poll();
+    if (not events.empty())
+    {
+        pending_inputs.insert(pending_inputs.end(), events.begin(), events.end());
+    }
+    if (not pending_inputs.empty())
+    {
+        for (auto&& entity: interesting_entities)
+        {
+            // Add the key input to KeyInputComponents, add mouse input to MouseInputComponents
+            // Maybe interesting_entities needs to be a System defined thing, where they are just notified on entity addition? Might even only want to store the component in this case.
+        }
+    }
+
+}
+
+void InputSystem::entity_added(std::shared_ptr<Entity> &entity)
+{
+    if (entity->component_mask[KeyboardInputComponent::type])
+    {
+        keyboard_entities.push_back(entity);
+    }
+
+    if (entity->component_mask[MouseInputComponent::type])
+    {
+        mouse_entities.push_back(entity);
+    }
 }
 
 std::vector<Input> CursesInputPoller::poll(void)
@@ -100,3 +126,4 @@ void CursesInputSystem::update(ms time_elapsed)
         dispatch->QueueEvent(event);
     }
 }
+
